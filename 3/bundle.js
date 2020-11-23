@@ -95,15 +95,16 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _view_info_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./view/info.js */ "./src/view/info.js");
-/* harmony import */ var _view_cost_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view/cost.js */ "./src/view/cost.js");
-/* harmony import */ var _view_menu_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/menu.js */ "./src/view/menu.js");
-/* harmony import */ var _view_filters_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/filters.js */ "./src/view/filters.js");
-/* harmony import */ var _view_events_sort_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/events-sort.js */ "./src/view/events-sort.js");
-/* harmony import */ var _view_events_list_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/events-list.js */ "./src/view/events-list.js");
-/* harmony import */ var _view_event_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/event.js */ "./src/view/event.js");
-/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
-/* harmony import */ var _view_add_point_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./view/add-point.js */ "./src/view/add-point.js");
+/* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
+/* harmony import */ var _view_info_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view/info.js */ "./src/view/info.js");
+/* harmony import */ var _view_cost_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/cost.js */ "./src/view/cost.js");
+/* harmony import */ var _view_menu_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/menu.js */ "./src/view/menu.js");
+/* harmony import */ var _view_filters_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/filters.js */ "./src/view/filters.js");
+/* harmony import */ var _view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./view/events-sort.js */ "./src/view/events-sort.js");
+/* harmony import */ var _view_events_list_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./view/events-list.js */ "./src/view/events-list.js");
+/* harmony import */ var _view_event_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./view/event.js */ "./src/view/event.js");
+/* harmony import */ var _view_edit_point_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./view/edit-point.js */ "./src/view/edit-point.js");
+/* harmony import */ var _view_add_point_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./view/add-point.js */ "./src/view/add-point.js");
 
 
 
@@ -114,31 +115,49 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const EVENT_COUNT = 4;
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+const EVENTS_COUNT = [1, 2, 3];
+
+const headerContainer = document.querySelector(`.trip-main`);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_info_js__WEBPACK_IMPORTED_MODULE_1__["createInfo"])(), `afterbegin`, headerContainer);
+
+const headerTitle = headerContainer.querySelector(`.trip-info`);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_cost_js__WEBPACK_IMPORTED_MODULE_2__["createCost"])(), `beforeend`, headerTitle);
+
+const menuContainer = headerContainer.querySelector(`.trip-controls`);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_menu_js__WEBPACK_IMPORTED_MODULE_3__["createMenu"])(), `afterbegin`, menuContainer);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_filters_js__WEBPACK_IMPORTED_MODULE_4__["createFilters"])(), `beforeend`, menuContainer);
+
+const eventsContainer = document.querySelector(`.trip-events`);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__["createEventsSort"])(), `beforeend`, eventsContainer);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_events_list_js__WEBPACK_IMPORTED_MODULE_6__["createEventsList"])(), `beforeend`, eventsContainer);
+
+const eventsList = eventsContainer.querySelector(`.trip-events__list`);
+EVENTS_COUNT.forEach(() => {
+  Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_event_js__WEBPACK_IMPORTED_MODULE_7__["createEvent"])(), `beforeend`, eventsList);
+});
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_8__["editPoint"])(), `afterbegin`, eventsList);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(Object(_view_add_point_js__WEBPACK_IMPORTED_MODULE_9__["addPoint"])(), `beforeend`, eventsList);
+
+
+/***/ }),
+
+/***/ "./src/utils/utils.js":
+/*!****************************!*\
+  !*** ./src/utils/utils.js ***!
+  \****************************/
+/*! exports provided: render */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+const render = (template, place, container) => {
+  if (container) {
+    container.insertAdjacentHTML(place, template);
+  }
+  return;
 };
-const tripHeader = document.querySelector(`.trip-main`);
-render(tripHeader, Object(_view_info_js__WEBPACK_IMPORTED_MODULE_0__["createTripInfo"])(), `afterbegin`);
-
-const tripInfo = tripHeader.querySelector(`.trip-info`);
-render(tripInfo, Object(_view_cost_js__WEBPACK_IMPORTED_MODULE_1__["createTripCost"])(), `beforeend`);
-
-const tripMenu = tripHeader.querySelector(`.trip-controls`);
-render(tripMenu, Object(_view_menu_js__WEBPACK_IMPORTED_MODULE_2__["createTripMenu"])(), `afterbegin`);
-render(tripMenu, Object(_view_filters_js__WEBPACK_IMPORTED_MODULE_3__["createTripFilters"])(), `beforeend`);
-
-const tripEvents = document.querySelector(`.trip-events`);
-render(tripEvents, Object(_view_events_sort_js__WEBPACK_IMPORTED_MODULE_4__["createTripEventsSort"])(), `beforeend`);
-render(tripEvents, Object(_view_events_list_js__WEBPACK_IMPORTED_MODULE_5__["createTripEventsList"])(), `beforeend`);
-
-const tripEventsList = tripEvents.querySelector(`.trip-events__list`);
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(tripEventsList, Object(_view_event_js__WEBPACK_IMPORTED_MODULE_6__["createTripEvent"])(), `beforeend`);
-}
-render(tripEventsList, Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_7__["editTripPoint"])(), `afterbegin`);
-render(tripEventsList, Object(_view_add_point_js__WEBPACK_IMPORTED_MODULE_8__["addTripPoint"])(), `beforeend`);
 
 
 /***/ }),
@@ -147,13 +166,13 @@ render(tripEventsList, Object(_view_add_point_js__WEBPACK_IMPORTED_MODULE_8__["a
 /*!*******************************!*\
   !*** ./src/view/add-point.js ***!
   \*******************************/
-/*! exports provided: addTripPoint */
+/*! exports provided: addPoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addTripPoint", function() { return addTripPoint; });
-const addTripPoint = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addPoint", function() { return addPoint; });
+const addPoint = () => {
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -330,13 +349,13 @@ const addTripPoint = () => {
 /*!**************************!*\
   !*** ./src/view/cost.js ***!
   \**************************/
-/*! exports provided: createTripCost */
+/*! exports provided: createCost */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripCost", function() { return createTripCost; });
-const createTripCost = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCost", function() { return createCost; });
+const createCost = () => {
   return `<p class="trip-info__cost">
   Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
 </p>`;
@@ -349,15 +368,13 @@ const createTripCost = () => {
 /*!********************************!*\
   !*** ./src/view/edit-point.js ***!
   \********************************/
-/*! exports provided: editTripPoint */
+/*! exports provided: editPoint */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editTripPoint", function() { return editTripPoint; });
-const editTripPoint = () => {
-  const eventsList = document.querySelector(`.trip-events__list`);
-  eventsList.firstChild.remove();
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editPoint", function() { return editPoint; });
+const editPoint = () => {
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -527,13 +544,13 @@ const editTripPoint = () => {
 /*!***************************!*\
   !*** ./src/view/event.js ***!
   \***************************/
-/*! exports provided: createTripEvent */
+/*! exports provided: createEvent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripEvent", function() { return createTripEvent; });
-const createTripEvent = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createEvent", function() { return createEvent; });
+const createEvent = () => {
   return `<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="2019-03-18">MAR 18</time>
@@ -580,13 +597,13 @@ const createTripEvent = () => {
 /*!*********************************!*\
   !*** ./src/view/events-list.js ***!
   \*********************************/
-/*! exports provided: createTripEventsList */
+/*! exports provided: createEventsList */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripEventsList", function() { return createTripEventsList; });
-const createTripEventsList = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createEventsList", function() { return createEventsList; });
+const createEventsList = () => {
   return `<ul class="trip-events__list"></ul>`;
 };
 
@@ -597,13 +614,13 @@ const createTripEventsList = () => {
 /*!*********************************!*\
   !*** ./src/view/events-sort.js ***!
   \*********************************/
-/*! exports provided: createTripEventsSort */
+/*! exports provided: createEventsSort */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripEventsSort", function() { return createTripEventsSort; });
-const createTripEventsSort = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createEventsSort", function() { return createEventsSort; });
+const createEventsSort = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
     <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" checked>
@@ -639,13 +656,13 @@ const createTripEventsSort = () => {
 /*!*****************************!*\
   !*** ./src/view/filters.js ***!
   \*****************************/
-/*! exports provided: createTripFilters */
+/*! exports provided: createFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripFilters", function() { return createTripFilters; });
-const createTripFilters = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFilters", function() { return createFilters; });
+const createFilters = () => {
   return `<h2 class="visually-hidden">Filter events</h2>
   <form class="trip-filters" action="#" method="get">
     <div class="trip-filters__filter">
@@ -674,13 +691,13 @@ const createTripFilters = () => {
 /*!**************************!*\
   !*** ./src/view/info.js ***!
   \**************************/
-/*! exports provided: createTripInfo */
+/*! exports provided: createInfo */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripInfo", function() { return createTripInfo; });
-const createTripInfo = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createInfo", function() { return createInfo; });
+const createInfo = () => {
   return `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
     <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
@@ -697,13 +714,13 @@ const createTripInfo = () => {
 /*!**************************!*\
   !*** ./src/view/menu.js ***!
   \**************************/
-/*! exports provided: createTripMenu */
+/*! exports provided: createMenu */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTripMenu", function() { return createTripMenu; });
-const createTripMenu = () => {
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createMenu", function() { return createMenu; });
+const createMenu = () => {
   return `<h2 class="visually-hidden">Switch trip view</h2>
   <nav class="trip-controls__trip-tabs  trip-tabs">
     <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
