@@ -1,35 +1,35 @@
-import {createTripInfo} from './view/info.js';
-import {createTripCost} from './view/cost.js';
-import {createTripMenu} from './view/menu.js';
-import {createTripFilters} from './view/filters.js';
-import {createTripEventsSort} from './view/events-sort.js';
-import {createTripEventsList} from './view/events-list.js';
-import {createTripEvent} from './view/event.js';
-import {editTripPoint} from './view/edit-point.js';
-import {addTripPoint} from './view/add-point.js';
+import {createInfo} from './view/info.js';
+import {createCost} from './view/cost.js';
+import {createMenu} from './view/menu.js';
+import {createFilters} from './view/filters.js';
+import {createEventsSort} from './view/events-sort.js';
+import {createEventsList} from './view/events-list.js';
+import {createEvent} from './view/event.js';
+import {editPoint} from './view/edit-point.js';
+import {addPoint} from './view/add-point.js';
 
-const EVENT_COUNT = 4;
+const EVENTS_COUNT = 4;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 const tripHeader = document.querySelector(`.trip-main`);
-render(tripHeader, createTripInfo(), `afterbegin`);
+render(tripHeader, createInfo(), `afterbegin`);
 
 const tripInfo = tripHeader.querySelector(`.trip-info`);
-render(tripInfo, createTripCost(), `beforeend`);
+render(tripInfo, createCost(), `beforeend`);
 
 const tripMenu = tripHeader.querySelector(`.trip-controls`);
-render(tripMenu, createTripMenu(), `afterbegin`);
-render(tripMenu, createTripFilters(), `beforeend`);
+render(tripMenu, createMenu(), `afterbegin`);
+render(tripMenu, createFilters(), `beforeend`);
 
 const tripEvents = document.querySelector(`.trip-events`);
-render(tripEvents, createTripEventsSort(), `beforeend`);
-render(tripEvents, createTripEventsList(), `beforeend`);
+render(tripEvents, createEventsSort(), `beforeend`);
+render(tripEvents, createEventsList(), `beforeend`);
 
 const tripEventsList = tripEvents.querySelector(`.trip-events__list`);
-for (let i = 0; i < EVENT_COUNT; i++) {
-  render(tripEventsList, createTripEvent(), `beforeend`);
+for (let i = 0; i < EVENTS_COUNT; i++) {
+  render(tripEventsList, createEvent(), `beforeend`);
 }
-render(tripEventsList, editTripPoint(), `afterbegin`);
-render(tripEventsList, addTripPoint(), `beforeend`);
+render(tripEventsList, editPoint(), `afterbegin`);
+render(tripEventsList, addPoint(), `beforeend`);
