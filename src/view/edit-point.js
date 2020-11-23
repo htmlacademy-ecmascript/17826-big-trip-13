@@ -1,6 +1,4 @@
 export const editPoint = () => {
-  const eventsList = document.querySelector(`.trip-events__list`);
-  eventsList.firstChild.remove();
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
     <header class="event__header">

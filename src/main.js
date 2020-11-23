@@ -1,3 +1,4 @@
+import {render} from './view/utils.js';
 import {createInfo} from './view/info.js';
 import {createCost} from './view/cost.js';
 import {createMenu} from './view/menu.js';
@@ -8,28 +9,25 @@ import {createEvent} from './view/event.js';
 import {editPoint} from './view/edit-point.js';
 import {addPoint} from './view/add-point.js';
 
-const EVENTS_COUNT = 4;
+const EVENTS_COUNT = [1, 2, 3];
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-const tripHeader = document.querySelector(`.trip-main`);
-render(tripHeader, createInfo(), `afterbegin`);
+const headerContainer = document.querySelector(`.trip-main`);
+render(createInfo(), `afterbegin`, headerContainer);
 
-const tripInfo = tripHeader.querySelector(`.trip-info`);
-render(tripInfo, createCost(), `beforeend`);
+const headerTitle = headerContainer.querySelector(`.trip-info`);
+render(createCost(), `beforeend`, headerTitle);
 
-const tripMenu = tripHeader.querySelector(`.trip-controls`);
-render(tripMenu, createMenu(), `afterbegin`);
-render(tripMenu, createFilters(), `beforeend`);
+const menuContainer = headerContainer.querySelector(`.trip-controls`);
+render(createMenu(), `afterbegin`, menuContainer);
+render(createFilters(), `beforeend`, menuContainer);
 
-const tripEvents = document.querySelector(`.trip-events`);
-render(tripEvents, createEventsSort(), `beforeend`);
-render(tripEvents, createEventsList(), `beforeend`);
+const eventsContainer = document.querySelector(`.trip-events`);
+render(createEventsSort(), `beforeend`, eventsContainer);
+render(createEventsList(), `beforeend`, eventsContainer);
 
-const tripEventsList = tripEvents.querySelector(`.trip-events__list`);
-for (let i = 0; i < EVENTS_COUNT; i++) {
-  render(tripEventsList, createEvent(), `beforeend`);
-}
-render(tripEventsList, editPoint(), `afterbegin`);
-render(tripEventsList, addPoint(), `beforeend`);
+const eventsList = eventsContainer.querySelector(`.trip-events__list`);
+EVENTS_COUNT.forEach(() => {
+  render(createEvent(), `beforeend`, eventsList);
+});
+render(editPoint(), `afterbegin`, eventsList);
+render(addPoint(), `beforeend`, eventsList);
