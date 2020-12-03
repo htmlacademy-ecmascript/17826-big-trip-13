@@ -12,5 +12,6 @@ Thumbs.db
 node_modules/
 
 # Собранные файлы (допишите самостоятельно)
+package-lock.json
 public/bundle.js
 public/bundle.js.map
