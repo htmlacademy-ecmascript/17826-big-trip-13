@@ -21,23 +21,35 @@ const createPointDateTemplate = (start, end) => {
 
 const createPointDescriptionTemplate = (arr) => {
   let str = ``;
-  arr.forEach((elem) => {
-    str += elem += ` `;
-  });
+  if (arr.length > 0) {
+    str += `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">`;
+    arr.forEach((elem) => {
+      str += elem += ` `;
+    });
+    str += `</p>
+    </section>`;
+  }
   return str;
 };
 
 const createPointPhotosTemplate = (arr) => {
   let str = ``;
-  arr.forEach((elem) => {
-    str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
-  });
+  if (arr.length > 0) {
+    arr.forEach((elem) => {
+      str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
+    });
+  }
   return str;
 };
 
 const createPointOffersTemplate = (defaultArr, checkedArr) => {
   let str = ``;
   if (checkedArr.length > 0) {
+    str += `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">`;
     defaultArr.forEach((elem) => {
       str += `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${elem.id}" type="checkbox" name="event-offer-${elem.id}" ${checkedArr.includes(elem) ? `checked` : ``}>
@@ -48,6 +60,7 @@ const createPointOffersTemplate = (defaultArr, checkedArr) => {
       </label>
     </div>`;
     });
+    str += `</div></section>`;
   }
   return str;
 };
@@ -155,18 +168,8 @@ export const createEditPointForm = (point) => {
       </button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-        ${offersTemplate}
-        </div>
-      </section>
-
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${descriptionTemplate}</p>
-      </section>
+      ${offersTemplate}
+      ${descriptionTemplate}
     </section>
   </form>
 </li>`;
