@@ -17,7 +17,18 @@ const renderOffers = (arr) => {
 export const createPoint = (point) => {
   const {date, type, city, timeStart, timeEnd, price, offers, isFavorite} = point;
   const title = type + ` ` + city;
-  const duration = dayjs(timeEnd).diff(timeStart);
+
+  const getDuration = (start, end) => {
+    let str = ``;
+    const diff = dayjs(end).diff(start, `minute`);
+    if (diff / 60 <= 0) {
+      str += diff;
+    }
+    str += Math.trunc(diff / 60) + `H ` + (diff % 60) + `M`;
+    return str;
+  };
+  const duration = getDuration(timeStart, timeEnd);
+
   const offersList = renderOffers(offers);
 
   const favoriteClassName = isFavorite
@@ -37,7 +48,7 @@ export const createPoint = (point) => {
         &mdash;
         <time class="event__end-time" datetime="${timeEnd}">${dayjs(timeEnd).format(`HH:mm`)}</time>
       </p>
-      <p class="event__duration">${dayjs(duration).format(`mm`) + `M`}</p>
+      <p class="event__duration">${duration}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${price}</span>

@@ -16,11 +16,6 @@ const generateDate = () => {
   return dayjs().add(daysGap, `day`).toDate();
 };
 
-const generateTime = () => {
-  const timeGap = getRandomInteger(-MAX_TIME_GAP, MAX_TIME_GAP);
-  return dayjs().add(timeGap, `minute`).toDate();
-};
-
 const typesPoint = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const cities = [`Казань`, `Рига`, `Прага`, `Мюнхен`];
 
@@ -84,7 +79,7 @@ const generatePoint = () => {
   const date = generateDate();
   const type = getRandomElement(typesPoint);
   const city = getRandomElement(cities);
-  const timeStart = generateTime();
+  const timeStart = date;
   const timeEnd = dayjs(timeStart).add(getRandomInteger(0, MAX_TIME_GAP), `minute`).toDate();
   const offers = new Array(getRandomInteger(0, offersList.length)).fill().map(generateOffers);
   const randomDescription = new Array(getRandomInteger(0, MAX_LENGTH_DESCRIPTION)).fill().map(generateDescription);
