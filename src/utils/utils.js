@@ -19,6 +19,7 @@ const getRandomArr = (arr) => {
   }
   return newArr;
 };
+
 export {
   render,
   getRandomInteger,
