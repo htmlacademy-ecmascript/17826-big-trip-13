@@ -3,44 +3,49 @@ import {cities, offersList} from '../mock/point.js';
 
 const createPointCitiesTemplate = (arr) => {
   let str = ``;
+  str += `<datalist id="destination-list-1">`;
   arr.forEach((elem) => {
     str += `<option value="${elem}"></option>`;
   });
+  str += `</datalist>`;
   return str;
 };
 
 const createPointDateTemplate = (start, end) => {
-  return `<label class="visually-hidden" for="event-start-time-1">From</label>
+  return `<div class="event__field-group  event__field-group--time">
+  <label class="visually-hidden" for="event-start-time-1">From</label>
   <input class="event__input  event__input--time" id="event-start-time-1" type="text"
   name="event-start-time" value="${dayjs(start).format(`DD/MM/YY HH:mm`)}">
   &mdash;
   <label class="visually-hidden" for="event-end-time-1">To</label>
   <input class="event__input  event__input--time" id="event-end-time-1" type="text"
-  name="event-end-time" value="${dayjs(end).format(`DD/MM/YY HH:mm`)}">`;
+  name="event-end-time" value="${dayjs(end).format(`DD/MM/YY HH:mm`)}">
+  </div>`;
 };
 
 const createPointDescriptionTemplate = (arr) => {
   let str = ``;
   if (arr.length > 0) {
-    str += `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">`;
+    str += `<p class="event__destination-description">`;
     arr.forEach((elem) => {
       str += elem += ` `;
     });
-    str += `</p>
-    </section>`;
+    str += `</p>`;
   }
   return str;
 };
 
 const createPointPhotosTemplate = (arr) => {
   let str = ``;
+  str += `<div class="event__photos-container">
+  <div class="event__photos-tape">`;
   if (arr.length > 0) {
     arr.forEach((elem) => {
       str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
     });
   }
+  str += `</div>
+  </div>`;
   return str;
 };
 
@@ -66,7 +71,7 @@ const createPointOffersTemplate = (defaultArr, checkedArr) => {
 };
 
 export const createEditPointForm = (point) => {
-  const {type, city, timeStart, timeEnd, offers} = point;
+  const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description} = point.destination;
 
   const citiesTemplate = createPointCitiesTemplate(cities);
@@ -146,19 +151,15 @@ export const createEditPointForm = (point) => {
           ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-        <datalist id="destination-list-1">
           ${citiesTemplate}
-        </datalist>
       </div>
-      <div class="event__field-group  event__field-group--time">
         ${dateTemplate}
-      </div>
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>

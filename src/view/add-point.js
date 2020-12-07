@@ -90,15 +90,9 @@ export const createAddPointForm = (point = {}) => {
           ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-        <datalist id="destination-list-1">
           ${citiesTemplate}
-        </datalist>
       </div>
-
-      <div class="event__field-group  event__field-group--time">
         ${dateTemplate}
-      </div>
-
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
@@ -112,13 +106,11 @@ export const createAddPointForm = (point = {}) => {
     </header>
     <section class="event__details">
       ${offersTemplate}
-      ${descriptionTemplate}
-
-        <div class="event__photos-container">
-          <div class="event__photos-tape">
-            ${photosTemplate}
-          </div>
-        </div>
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          ${descriptionTemplate}
+          ${photosTemplate}
+        </section>
       </section>
     </section>
   </form>
