@@ -130,15 +130,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const POINTS_COUNT = 3;
+const POINTS_COUNT = 15;
 const points = new Array(POINTS_COUNT).fill().map(_mock_point_js__WEBPACK_IMPORTED_MODULE_10__["generatePoint"]);
+const sortedPoints = points.sort((a, b) => {
+  if (a.date > b.date) {
+    return 1;
+  } if (a.date < b.date) {
+    return -1;
+  }
+  return 0;
+});
 
 const headerContainer = document.querySelector(`.trip-main`);
 const headerInfoElement = Object(_view_info_js__WEBPACK_IMPORTED_MODULE_1__["createInfo"])();
 Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerInfoElement, `afterbegin`, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
-const headerCostElement = Object(_view_cost_js__WEBPACK_IMPORTED_MODULE_2__["createCost"])(points);
+const headerCostElement = Object(_view_cost_js__WEBPACK_IMPORTED_MODULE_2__["createCost"])(sortedPoints);
 Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerCostElement, `beforeend`, headerInfo);
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
@@ -154,16 +162,15 @@ const pointsListElement = Object(_view_events_list_js__WEBPACK_IMPORTED_MODULE_6
 Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointsListElement, `beforeend`, pointsContainer);
 
 const pointsList = pointsContainer.querySelector(`.trip-events__list`);
-points.forEach((point) => {
+sortedPoints.forEach((point) => {
   const pointElement = Object(_view_point_js__WEBPACK_IMPORTED_MODULE_7__["createPoint"])(point);
   Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointElement, `beforeend`, pointsList);
 });
-const editPointForm = Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_8__["createEditPointForm"])(points[0]);
+const editPointForm = Object(_view_edit_point_js__WEBPACK_IMPORTED_MODULE_8__["createEditPointForm"])(sortedPoints[0]);
 Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(editPointForm, `afterbegin`, pointsList);
-for (let i = points.length - 1; i < points.length; i++) {
-  const addPointForm = Object(_view_add_point_js__WEBPACK_IMPORTED_MODULE_9__["createAddPointForm"])(points[i]);
-  Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointForm, `beforeend`, pointsList);
-}
+
+const addPointForm = Object(_view_add_point_js__WEBPACK_IMPORTED_MODULE_9__["createAddPointForm"])(sortedPoints[sortedPoints.length - 1]);
+Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointForm, `beforeend`, pointsList);
 
 
 /***/ }),
@@ -196,11 +203,6 @@ const MAX_COUNT_PHOTOS = 5;
 const generateDate = () => {
   const daysGap = Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-MAX_DATE_GAP, MAX_DATE_GAP);
   return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().add(daysGap, `day`).toDate();
-};
-
-const generateTime = () => {
-  const timeGap = Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(-MAX_TIME_GAP, MAX_TIME_GAP);
-  return dayjs__WEBPACK_IMPORTED_MODULE_0___default()().add(timeGap, `minute`).toDate();
 };
 
 const typesPoint = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
@@ -266,7 +268,7 @@ const generatePoint = () => {
   const date = generateDate();
   const type = Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomElement"])(typesPoint);
   const city = Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomElement"])(cities);
-  const timeStart = generateTime();
+  const timeStart = date;
   const timeEnd = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(timeStart).add(Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, MAX_TIME_GAP), `minute`).toDate();
   const offers = new Array(Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, offersList.length)).fill().map(generateOffers);
   const randomDescription = new Array(Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_1__["getRandomInteger"])(0, MAX_LENGTH_DESCRIPTION)).fill().map(generateDescription);
@@ -326,6 +328,7 @@ const getRandomArr = (arr) => {
   }
   return newArr;
 };
+
 
 
 
@@ -429,15 +432,9 @@ const createAddPointForm = (point = {}) => {
           ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-        <datalist id="destination-list-1">
           ${citiesTemplate}
-        </datalist>
       </div>
-
-      <div class="event__field-group  event__field-group--time">
         ${dateTemplate}
-      </div>
-
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
@@ -450,25 +447,12 @@ const createAddPointForm = (point = {}) => {
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-          ${offersTemplate}
-        </div>
-      </section>
-
+      ${offersTemplate}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">
           ${descriptionTemplate}
-        </p>
-
-        <div class="event__photos-container">
-          <div class="event__photos-tape">
-            ${photosTemplate}
-          </div>
-        </div>
+          ${photosTemplate}
+        </section>
       </section>
     </section>
   </form>
@@ -537,41 +521,58 @@ __webpack_require__.r(__webpack_exports__);
 
 const createPointCitiesTemplate = (arr) => {
   let str = ``;
+  str += `<datalist id="destination-list-1">`;
   arr.forEach((elem) => {
     str += `<option value="${elem}"></option>`;
   });
+  str += `</datalist>`;
   return str;
 };
 
 const createPointDateTemplate = (start, end) => {
-  return `<label class="visually-hidden" for="event-start-time-1">From</label>
+  return `<div class="event__field-group  event__field-group--time">
+  <label class="visually-hidden" for="event-start-time-1">From</label>
   <input class="event__input  event__input--time" id="event-start-time-1" type="text"
   name="event-start-time" value="${dayjs__WEBPACK_IMPORTED_MODULE_0___default()(start).format(`DD/MM/YY HH:mm`)}">
   &mdash;
   <label class="visually-hidden" for="event-end-time-1">To</label>
   <input class="event__input  event__input--time" id="event-end-time-1" type="text"
-  name="event-end-time" value="${dayjs__WEBPACK_IMPORTED_MODULE_0___default()(end).format(`DD/MM/YY HH:mm`)}">`;
+  name="event-end-time" value="${dayjs__WEBPACK_IMPORTED_MODULE_0___default()(end).format(`DD/MM/YY HH:mm`)}">
+  </div>`;
 };
 
 const createPointDescriptionTemplate = (arr) => {
   let str = ``;
-  arr.forEach((elem) => {
-    str += elem += ` `;
-  });
+  if (arr.length > 0) {
+    str += `<p class="event__destination-description">`;
+    arr.forEach((elem) => {
+      str += elem += ` `;
+    });
+    str += `</p>`;
+  }
   return str;
 };
 
 const createPointPhotosTemplate = (arr) => {
   let str = ``;
-  arr.forEach((elem) => {
-    str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
-  });
+  str += `<div class="event__photos-container">
+  <div class="event__photos-tape">`;
+  if (arr.length > 0) {
+    arr.forEach((elem) => {
+      str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
+    });
+  }
+  str += `</div>
+  </div>`;
   return str;
 };
 
 const createPointOffersTemplate = (defaultArr, checkedArr) => {
   let str = ``;
   if (checkedArr.length > 0) {
+    str += `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">`;
     defaultArr.forEach((elem) => {
       str += `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${elem.id}" type="checkbox" name="event-offer-${elem.id}" ${checkedArr.includes(elem) ? `checked` : ``}>
@@ -582,12 +583,13 @@ const createPointOffersTemplate = (defaultArr, checkedArr) => {
       </label>
     </div>`;
     });
+    str += `</div></section>`;
   }
   return str;
 };
 
 const createEditPointForm = (point) => {
-  const {type, city, timeStart, timeEnd, offers} = point;
+  const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description} = point.destination;
 
   const citiesTemplate = createPointCitiesTemplate(_mock_point_js__WEBPACK_IMPORTED_MODULE_1__["cities"]);
@@ -667,19 +669,15 @@ const createEditPointForm = (point) => {
           ${type}
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${city}" list="destination-list-1">
-        <datalist id="destination-list-1">
           ${citiesTemplate}
-        </datalist>
       </div>
-      <div class="event__field-group  event__field-group--time">
         ${dateTemplate}
-      </div>
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -689,18 +687,8 @@ const createEditPointForm = (point) => {
       </button>
     </header>
     <section class="event__details">
-      <section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-        <div class="event__available-offers">
-        ${offersTemplate}
-        </div>
-      </section>
-
-      <section class="event__section  event__section--destination">
-        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${descriptionTemplate}</p>
-      </section>
+      ${offersTemplate}
+      ${descriptionTemplate}
     </section>
   </form>
 </li>`;
@@ -881,7 +869,18 @@ const renderOffers = (arr) => {
 const createPoint = (point) => {
   const {date, type, city, timeStart, timeEnd, price, offers, isFavorite} = point;
   const title = type + ` ` + city;
-  const duration = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(timeEnd).diff(timeStart);
+
+  const getDuration = (start, end) => {
+    let str = ``;
+    const diff = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(end).diff(start, `minute`);
+    if (diff / 60 <= 0) {
+      str += diff;
+    }
+    str += Math.trunc(diff / 60) + `H ` + (diff % 60) + `M`;
+    return str;
+  };
+  const duration = getDuration(timeStart, timeEnd);
+
   const offersList = renderOffers(offers);
 
   const favoriteClassName = isFavorite
@@ -901,7 +900,7 @@ const createPoint = (point) => {
         &mdash;
         <time class="event__end-time" datetime="${timeEnd}">${dayjs__WEBPACK_IMPORTED_MODULE_0___default()(timeEnd).format(`HH:mm`)}</time>
       </p>
-      <p class="event__duration">${dayjs__WEBPACK_IMPORTED_MODULE_0___default()(duration).format(`mm`) + `M`}</p>
+      <p class="event__duration">${duration}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${price}</span>
