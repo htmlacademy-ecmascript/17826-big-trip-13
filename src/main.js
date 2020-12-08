@@ -2,32 +2,52 @@ import {render} from './utils/utils.js';
 import {createInfo} from './view/info.js';
 import {createCost} from './view/cost.js';
 import {createMenu} from './view/menu.js';
-import {createFilters} from './view/filters.js';
-import {createEventsSort} from './view/events-sort.js';
+import {createFiltersForm} from './view/filters.js';
+import {createEventsSortForm} from './view/events-sort.js';
 import {createEventsList} from './view/events-list.js';
-import {createEvent} from './view/event.js';
-import {editPoint} from './view/edit-point.js';
-import {addPoint} from './view/add-point.js';
+import {createPoint} from './view/point.js';
+import {createEditPointForm} from './view/edit-point.js';
+import {createAddPointForm} from './view/add-point.js';
+import {generatePoint} from './mock/point.js';
 
-const EVENTS_COUNT = [1, 2, 3];
+const POINTS_COUNT = 15;
+const points = new Array(POINTS_COUNT).fill().map(generatePoint);
+const sortedPoints = points.sort((a, b) => {
+  if (a.date > b.date) {
+    return 1;
+  } if (a.date < b.date) {
+    return -1;
+  }
+  return 0;
+});
 
 const headerContainer = document.querySelector(`.trip-main`);
-render(createInfo(), `afterbegin`, headerContainer);
+const headerInfoElement = createInfo();
+render(headerInfoElement, `afterbegin`, headerContainer);
 
-const headerTitle = headerContainer.querySelector(`.trip-info`);
-render(createCost(), `beforeend`, headerTitle);
+const headerInfo = headerContainer.querySelector(`.trip-info`);
+const headerCostElement = createCost(sortedPoints);
+render(headerCostElement, `beforeend`, headerInfo);
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
-render(createMenu(), `afterbegin`, menuContainer);
-render(createFilters(), `beforeend`, menuContainer);
+const menuElement = createMenu();
+render(menuElement, `afterbegin`, menuContainer);
+const filtersForm = createFiltersForm();
+render(filtersForm, `beforeend`, menuContainer);
 
-const eventsContainer = document.querySelector(`.trip-events`);
-render(createEventsSort(), `beforeend`, eventsContainer);
-render(createEventsList(), `beforeend`, eventsContainer);
+const pointsContainer = document.querySelector(`.trip-events`);
+const pointsSortForm = createEventsSortForm();
+render(pointsSortForm, `beforeend`, pointsContainer);
+const pointsListElement = createEventsList();
+render(pointsListElement, `beforeend`, pointsContainer);
 
-const eventsList = eventsContainer.querySelector(`.trip-events__list`);
-EVENTS_COUNT.forEach(() => {
-  render(createEvent(), `beforeend`, eventsList);
+const pointsList = pointsContainer.querySelector(`.trip-events__list`);
+sortedPoints.forEach((point) => {
+  const pointElement = createPoint(point);
+  render(pointElement, `beforeend`, pointsList);
 });
-render(editPoint(), `afterbegin`, eventsList);
-render(addPoint(), `beforeend`, eventsList);
+const editPointForm = createEditPointForm(sortedPoints[0]);
+render(editPointForm, `afterbegin`, pointsList);
+
+const addPointForm = createAddPointForm(sortedPoints[sortedPoints.length - 1]);
+render(addPointForm, `beforeend`, pointsList);
