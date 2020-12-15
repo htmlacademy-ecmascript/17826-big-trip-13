@@ -1,4 +1,4 @@
-import {cities, offersList} from '../mock/point.js';
+import {citiesList, offersList} from '../mock/point.js';
 import {
   createPointCitiesTemplate,
   createPointDateTemplate,
@@ -12,7 +12,7 @@ export const createAddPointForm = (point = {}) => {
   const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description, photos} = point.destination;
 
-  const citiesTemplate = createPointCitiesTemplate(cities);
+  const citiesTemplate = createPointCitiesTemplate(citiesList);
   const dateTemplate = createPointDateTemplate(timeStart, timeEnd);
   const offersTemplate = createPointOffersTemplate(offersList, offers);
   const descriptionTemplate = createPointDescriptionTemplate(description);

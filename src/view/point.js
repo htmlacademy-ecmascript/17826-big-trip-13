@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
 
-const renderOffers = (arr) => {
+const renderOffers = (offers) => {
   let str = ``;
-  if (arr.length > 0) {
-    arr.forEach((elem) => {
+  if (offers.length > 0) {
+    offers.forEach((offer) => {
       str += `<li class="event__offer">
-      <span class="event__offer-title">${elem.name}</span>
+      <span class="event__offer-title">${offer.name}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${elem.cost}</span>
+      <span class="event__offer-price">${offer.cost}</span>
     </li>`;
     });
   }
@@ -18,9 +18,9 @@ export const createPoint = (point) => {
   const {date, type, city, timeStart, timeEnd, price, offers, isFavorite} = point;
   const title = type + ` ` + city;
 
-  const getDuration = (start, end) => {
+  const getDuration = (startTime, endTime) => {
     let str = ``;
-    const diff = dayjs(end).diff(start, `minute`);
+    const diff = dayjs(endTime).diff(startTime, `minute`);
     if (diff / 60 <= 0) {
       str += diff;
     }

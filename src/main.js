@@ -1,6 +1,6 @@
 import {render} from './utils/utils.js';
 import {createInfo} from './view/info.js';
-import {createCost} from './view/cost.js';
+import {createHeaderCost} from './view/cost.js';
 import {createMenu} from './view/menu.js';
 import {createFiltersForm} from './view/filters.js';
 import {createEventsSortForm} from './view/events-sort.js';
@@ -26,7 +26,7 @@ const headerInfoElement = createInfo();
 render(headerInfoElement, `afterbegin`, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
-const headerCostElement = createCost(sortedPoints);
+const headerCostElement = createHeaderCost(sortedPoints);
 render(headerCostElement, `beforeend`, headerInfo);
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);

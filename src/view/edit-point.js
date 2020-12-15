@@ -1,47 +1,47 @@
 import dayjs from 'dayjs';
-import {cities, offersList} from '../mock/point.js';
+import {citiesList, offersList} from '../mock/point.js';
 
-const createPointCitiesTemplate = (arr) => {
+const createPointCitiesTemplate = (cities) => {
   let str = ``;
   str += `<datalist id="destination-list-1">`;
-  arr.forEach((elem) => {
-    str += `<option value="${elem}"></option>`;
+  cities.forEach((city) => {
+    str += `<option value="${city}"></option>`;
   });
   str += `</datalist>`;
   return str;
 };
 
-const createPointDateTemplate = (start, end) => {
+const createPointDateTemplate = (timeStart, timeEnd) => {
   return `<div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time-1">From</label>
   <input class="event__input  event__input--time" id="event-start-time-1" type="text"
-  name="event-start-time" value="${dayjs(start).format(`DD/MM/YY HH:mm`)}">
+  name="event-start-time" value="${dayjs(timeStart).format(`DD/MM/YY HH:mm`)}">
   &mdash;
   <label class="visually-hidden" for="event-end-time-1">To</label>
   <input class="event__input  event__input--time" id="event-end-time-1" type="text"
-  name="event-end-time" value="${dayjs(end).format(`DD/MM/YY HH:mm`)}">
+  name="event-end-time" value="${dayjs(timeEnd).format(`DD/MM/YY HH:mm`)}">
   </div>`;
 };
 
-const createPointDescriptionTemplate = (arr) => {
+const createPointDescriptionTemplate = (description) => {
   let str = ``;
-  if (arr.length > 0) {
+  if (description.length > 0) {
     str += `<p class="event__destination-description">`;
-    arr.forEach((elem) => {
-      str += elem += ` `;
+    description.forEach((item) => {
+      str += item += ` `;
     });
     str += `</p>`;
   }
   return str;
 };
 
-const createPointPhotosTemplate = (arr) => {
+const createPointPhotosTemplate = (photos) => {
   let str = ``;
   str += `<div class="event__photos-container">
   <div class="event__photos-tape">`;
-  if (arr.length > 0) {
-    arr.forEach((elem) => {
-      str += `<img class="event__photo" src="${elem}.jpg" alt="Event photo">`;
+  if (photos.length > 0) {
+    photos.forEach((item) => {
+      str += `<img class="event__photo" src="${item}.jpg" alt="Event photo">`;
     });
   }
   str += `</div>
@@ -49,19 +49,19 @@ const createPointPhotosTemplate = (arr) => {
   return str;
 };
 
-const createPointOffersTemplate = (defaultArr, checkedArr) => {
+const createPointOffersTemplate = (defaultOffers, checkedOffers) => {
   let str = ``;
-  if (checkedArr.length > 0) {
+  if (checkedOffers.length > 0) {
     str += `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">`;
-    defaultArr.forEach((elem) => {
+    defaultOffers.forEach((offer) => {
       str += `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${elem.id}" type="checkbox" name="event-offer-${elem.id}" ${checkedArr.includes(elem) ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${elem.id}">
-        <span class="event__offer-title">${elem.name}</span>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${checkedOffers.includes(offer) ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${offer.id}">
+        <span class="event__offer-title">${offer.name}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${elem.cost}</span>
+        <span class="event__offer-price">${offer.cost}</span>
       </label>
     </div>`;
     });
@@ -74,7 +74,7 @@ export const createEditPointForm = (point) => {
   const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description} = point.destination;
 
-  const citiesTemplate = createPointCitiesTemplate(cities);
+  const citiesTemplate = createPointCitiesTemplate(citiesList);
   const dateTemplate = createPointDateTemplate(timeStart, timeEnd);
   const offersTemplate = createPointOffersTemplate(offersList, offers);
   const descriptionTemplate = createPointDescriptionTemplate(description);

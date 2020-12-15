@@ -1,4 +1,4 @@
-export const createCost = (points) => {
+export const createHeaderCost = (points) => {
   let tripCost = 0;
   let offersCost = 0;
   points.forEach((point) => {
@@ -14,7 +14,7 @@ export const createCost = (points) => {
       });
     }
   });
-  let totalCost = tripCost + offersCost;
+  const totalCost = tripCost + offersCost;
 
   return `<p class="trip-info__cost">
   Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
