@@ -10,7 +10,7 @@ import {createEditPointForm} from './view/edit-point.js';
 import {createAddPointForm} from './view/add-point.js';
 import {generatePoint} from './mock/point.js';
 
-const POINTS_COUNT = 15;
+const POINTS_COUNT = 1;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {

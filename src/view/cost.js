@@ -1,10 +1,9 @@
 export const createHeaderCost = (points) => {
-  let tripCost = 0;
+  const tripCost = 0;
   let offersCost = 0;
-  points.forEach((point) => {
-    tripCost += point.price;
-    return tripCost;
-  });
+
+  const totalTripCost = points.reduce((total, current) => total + current.price, tripCost);
+
   points.forEach((point) => {
     const {offers} = point;
     if (offers.length > 0) {
@@ -14,7 +13,9 @@ export const createHeaderCost = (points) => {
       });
     }
   });
-  const totalCost = tripCost + offersCost;
+
+  // const totalOffersCost = getTotalOffersCost(points);
+  const totalCost = totalTripCost;
 
   return `<p class="trip-info__cost">
   Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
