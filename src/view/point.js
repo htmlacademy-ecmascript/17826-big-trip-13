@@ -16,7 +16,7 @@ const renderOffers = (offers) => {
 
 export const createPoint = (point) => {
   const {date, type, city, timeStart, timeEnd, price, offers, isFavorite} = point;
-  const title = type + ` ` + city;
+  const title = `${type} ${city}`;
 
   const getDuration = (startTime, endTime) => {
     let str = ``;
