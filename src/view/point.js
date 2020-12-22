@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const renderOffers = (offers) => {
+const renderTemplateOffers = (offers) => {
   let str = ``;
   if (offers.length > 0) {
     offers.forEach((offer) => {
@@ -29,7 +29,7 @@ export const createPoint = (point) => {
   };
   const duration = getDuration(timeStart, timeEnd);
 
-  const offersList = renderOffers(offers);
+  const offersList = renderTemplateOffers(offers);
 
   const favoriteClassName = isFavorite
     ? `event__favorite-btn event__favorite-btn--active`

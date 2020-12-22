@@ -1,4 +1,6 @@
-export const createHeaderCost = (points) => {
+import {createElement} from '../utils/utils.js';
+
+const createHeaderCost = (points) => {
   const tripCost = 0;
   const offersCost = 0;
 
@@ -20,3 +22,21 @@ export const createHeaderCost = (points) => {
   Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
 </p>`;
 };
+
+export default class HeaderCost {
+  constructor(points) {
+    this._points = points;
+    this._element = null;
+  }
+  getTemplate() {
+    return createHeaderCost(this._points);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
