@@ -1,13 +1,13 @@
-import {RenderPosition, renderTemplate, renderElement} from './utils/utils.js';
+import {RenderPosition, renderElement} from './utils/utils.js';
 import HeaderInfoView from './view/info.js';
 import HeaderCostView from './view/cost.js';
 import SiteMenuView from './view/menu.js';
 import SiteFiltersView from './view/filters.js';
 import EventsSortView from './view/events-sort.js';
 import EventListView from './view/events-list.js';
-import {createPoint} from './view/point.js';
-import {createEditPointForm} from './view/edit-point.js';
-import {createAddPointForm} from './view/add-point.js';
+import PointView from './view/point.js';
+import EditPointFormView from './view/edit-point.js';
+import AddPointFormView from './view/add-point.js';
 import {generatePoint} from './mock/point.js';
 
 const POINTS_COUNT = 5;
@@ -29,6 +29,7 @@ const headerInfo = headerContainer.querySelector(`.trip-info`);
 const headerCostElement = new HeaderCostView(sortedPoints).getElement();
 renderElement(headerCostElement, RenderPosition.BEFOREEND, headerInfo);
 
+
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
 const menuElement = new SiteMenuView().getElement();
 renderElement(menuElement, RenderPosition.AFTERBEGIN, menuContainer);
@@ -43,11 +44,11 @@ renderElement(pointsListElement, RenderPosition.BEFOREEND, pointsContainer);
 
 const pointsList = pointsContainer.querySelector(`.trip-events__list`);
 sortedPoints.forEach((point) => {
-  const pointElement = createPoint(point);
-  renderTemplate(pointElement, RenderPosition.BEFOREEND, pointsList);
+  const pointElement = new PointView(point).getElement();
+  renderElement(pointElement, RenderPosition.BEFOREEND, pointsList);
 });
-const editPointForm = createEditPointForm(sortedPoints[0]);
-renderTemplate(editPointForm, RenderPosition.AFTERBEGIN, pointsList);
+const editPointForm = new EditPointFormView(sortedPoints[0]).getElement();
+renderElement(editPointForm, RenderPosition.AFTERBEGIN, pointsList);
 
-const addPointForm = createAddPointForm(sortedPoints[sortedPoints.length - 1]);
-renderTemplate(addPointForm, RenderPosition.BEFOREEND, pointsList);
+const addPointForm = new AddPointFormView(sortedPoints[sortedPoints.length - 1]).getElement();
+renderElement(addPointForm, RenderPosition.BEFOREEND, pointsList);

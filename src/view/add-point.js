@@ -1,13 +1,77 @@
+import dayjs from 'dayjs';
 import {citiesList, offersList} from '../mock/point.js';
-import {
-  createPointCitiesTemplate,
-  createPointDateTemplate,
-  createPointOffersTemplate,
-  createPointDescriptionTemplate,
-  createPointPhotosTemplate
-} from './edit-point.js';
+import {createElement} from '../utils/utils.js';
 
-export const createAddPointForm = (point = {}) => {
+const createPointCitiesTemplate = (cities) => {
+  let str = ``;
+  str += `<datalist id="destination-list-1">`;
+  cities.forEach((city) => {
+    str += `<option value="${city}"></option>`;
+  });
+  str += `</datalist>`;
+  return str;
+};
+
+const createPointDateTemplate = (timeStart, timeEnd) => {
+  return `<div class="event__field-group  event__field-group--time">
+  <label class="visually-hidden" for="event-start-time-1">From</label>
+  <input class="event__input  event__input--time" id="event-start-time-1" type="text"
+  name="event-start-time" value="${dayjs(timeStart).format(`DD/MM/YY HH:mm`)}">
+  &mdash;
+  <label class="visually-hidden" for="event-end-time-1">To</label>
+  <input class="event__input  event__input--time" id="event-end-time-1" type="text"
+  name="event-end-time" value="${dayjs(timeEnd).format(`DD/MM/YY HH:mm`)}">
+  </div>`;
+};
+
+const createPointDescriptionTemplate = (description) => {
+  let str = ``;
+  if (description.length > 0) {
+    str += `<p class="event__destination-description">`;
+    description.forEach((item) => {
+      str += item += ` `;
+    });
+    str += `</p>`;
+  }
+  return str;
+};
+
+const createPointPhotosTemplate = (photos) => {
+  let str = ``;
+  str += `<div class="event__photos-container">
+  <div class="event__photos-tape">`;
+  if (photos.length > 0) {
+    photos.forEach((item) => {
+      str += `<img class="event__photo" src="${item}.jpg" alt="Event photo">`;
+    });
+  }
+  str += `</div>
+  </div>`;
+  return str;
+};
+
+const createPointOffersTemplate = (defaultOffers, checkedOffers) => {
+  let str = ``;
+  if (checkedOffers.length > 0) {
+    str += `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">`;
+    defaultOffers.forEach((offer) => {
+      str += `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${checkedOffers.includes(offer) ? `checked` : ``}>
+      <label class="event__offer-label" for="event-offer-${offer.id}">
+        <span class="event__offer-title">${offer.name}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.cost}</span>
+      </label>
+    </div>`;
+    });
+    str += `</div></section>`;
+  }
+  return str;
+};
+
+const createAddPointForm = (point = {}) => {
 
   const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description, photos} = point.destination;
@@ -116,3 +180,22 @@ export const createAddPointForm = (point = {}) => {
   </form>
 </li>`;
 };
+
+export default class AddPointForm {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+  getTemplate() {
+    return createAddPointForm(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

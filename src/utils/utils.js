@@ -3,12 +3,6 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-const renderTemplate = (template, place, container) => {
-  if (container) {
-    container.insertAdjacentHTML(place, template);
-  }
-};
-
 const renderElement = (element, place, container) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
@@ -35,7 +29,6 @@ const getRandomItem = (arr) => {
 
 export {
   RenderPosition,
-  renderTemplate,
   renderElement,
   createElement,
   getRandomInteger,

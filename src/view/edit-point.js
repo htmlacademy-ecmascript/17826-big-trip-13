@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {citiesList, offersList} from '../mock/point.js';
+import {createElement} from '../utils/utils.js';
 
 const createPointCitiesTemplate = (cities) => {
   let str = ``;
@@ -35,20 +36,6 @@ const createPointDescriptionTemplate = (description) => {
   return str;
 };
 
-const createPointPhotosTemplate = (photos) => {
-  let str = ``;
-  str += `<div class="event__photos-container">
-  <div class="event__photos-tape">`;
-  if (photos.length > 0) {
-    photos.forEach((item) => {
-      str += `<img class="event__photo" src="${item}.jpg" alt="Event photo">`;
-    });
-  }
-  str += `</div>
-  </div>`;
-  return str;
-};
-
 const createPointOffersTemplate = (defaultOffers, checkedOffers) => {
   let str = ``;
   if (checkedOffers.length > 0) {
@@ -70,7 +57,7 @@ const createPointOffersTemplate = (defaultOffers, checkedOffers) => {
   return str;
 };
 
-export const createEditPointForm = (point) => {
+const createEditPointForm = (point) => {
   const {type, city, timeStart, timeEnd, price, offers} = point;
   const {description} = point.destination;
 
@@ -176,10 +163,21 @@ export const createEditPointForm = (point) => {
 </li>`;
 };
 
-export {
-  createPointCitiesTemplate,
-  createPointDateTemplate,
-  createPointOffersTemplate,
-  createPointDescriptionTemplate,
-  createPointPhotosTemplate
-};
+export default class EditPointForm {
+  constructor(point) {
+    this._element = null;
+    this._point = point;
+  }
+  getTemplate() {
+    return createEditPointForm(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
