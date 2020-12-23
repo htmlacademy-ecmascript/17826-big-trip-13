@@ -3,7 +3,13 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-const renderElement = (element, place, container) => {
+const renderTemplate = (template, place, container) => {
+  if (container) {
+    container.insertAdjacentHTML(place, template);
+  }
+};
+
+const render = (element, place, container) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -29,7 +35,8 @@ const getRandomItem = (arr) => {
 
 export {
   RenderPosition,
-  renderElement,
+  render,
+  renderTemplate,
   createElement,
   getRandomInteger,
   getRandomItem,
