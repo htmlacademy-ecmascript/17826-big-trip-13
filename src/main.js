@@ -1,8 +1,8 @@
 import {RenderPosition, render} from './utils/utils.js';
-import HeaderInfoView from './view/info.js';
+import HeaderInfoView from './view/header-info.js';
 import HeaderCostView from './view/cost.js';
-import SiteMenuView from './view/menu.js';
-import SiteFiltersView from './view/filters.js';
+import MenuView from './view/menu.js';
+import FiltersView from './view/filters.js';
 import EventsSortView from './view/events-sort.js';
 import EventListView from './view/events-list.js';
 import PointView from './view/point.js';
@@ -34,10 +34,10 @@ render(headerCostElement, RenderPosition.BEFOREEND, headerInfo);
 
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
-const menuComponent = new SiteMenuView();
+const menuComponent = new MenuView();
 const menuElement = menuComponent.getElement();
 render(menuElement, RenderPosition.AFTERBEGIN, menuContainer);
-const filtersComponent = new SiteFiltersView();
+const filtersComponent = new FiltersView();
 const filtersForm = filtersComponent.getElement();
 render(filtersForm, RenderPosition.BEFOREEND, menuContainer);
 
@@ -47,28 +47,27 @@ if (sortedPoints.length === 0) {
   const noPointsElement = noPointsComponent.getElement();
   render(noPointsElement, RenderPosition.AFTERBEGIN, pointsContainer);
 } else {
-  const pointsSortFormComponent = new EventsSortView();
-  const pointsSortForm = pointsSortFormComponent.getElement();
-  render(pointsSortForm, RenderPosition.BEFOREEND, pointsContainer);
+  const eventsSortComponent = new EventsSortView();
+  const eventsSortForm = eventsSortComponent.getElement();
+  render(eventsSortForm, RenderPosition.BEFOREEND, pointsContainer);
   const pointsListComponent = new EventListView();
   const pointsListElement = pointsListComponent.getElement();
   render(pointsListElement, RenderPosition.BEFOREEND, pointsContainer);
 
-  const pointsList = pointsContainer.querySelector(`.trip-events__list`);
   sortedPoints.forEach((point) => {
-    const pointsComponent = new PointView(point);
-    const pointElement = pointsComponent.getElement();
+    const pointComponent = new PointView(point);
+    const pointElement = pointComponent.getElement();
     const editPointFormComponent = new EditPointFormView(point);
-    const editPointForm = editPointFormComponent.getElement();
-    render(pointElement, RenderPosition.BEFOREEND, pointsList);
+    const editPointFormElement = editPointFormComponent.getElement();
+    render(pointElement, RenderPosition.BEFOREEND, pointsListElement);
     const replacePointToEditForm = () => {
-      pointsList.replaceChild(editPointForm, pointElement);
+      pointsListElement.replaceChild(editPointFormElement, pointElement);
     };
     const replaceEditFormToPoint = () => {
-      pointsList.replaceChild(pointElement, editPointForm);
+      pointsListElement.replaceChild(pointElement, editPointFormElement);
     };
     const rollUpButtonPoint = pointElement.querySelector(`.event__rollup-btn`);
-    const rollUpButtonEditForm = editPointForm.querySelector(`.event__rollup-btn`);
+    const rollUpButtonEditForm = editPointFormElement.querySelector(`.event__rollup-btn`);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
@@ -90,8 +89,8 @@ if (sortedPoints.length === 0) {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    const editFormSubmitButton = editPointForm.querySelector(`.event__save-btn`);
-    editFormSubmitButton.addEventListener(`click`, (evt) => {
+    const submitFormButton = editPointFormElement.querySelector(`.event__save-btn`);
+    submitFormButton.addEventListener(`click`, (evt) => {
       evt.preventDefault();
       replaceEditFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
@@ -112,7 +111,7 @@ if (sortedPoints.length === 0) {
 
   newEventButton.addEventListener(`click`, (evt) => {
     evt.preventDefault();
-    render(addPointForm, RenderPosition.AFTERBEGIN, pointsList);
+    render(addPointForm, RenderPosition.AFTERBEGIN, pointsListElement);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 }
