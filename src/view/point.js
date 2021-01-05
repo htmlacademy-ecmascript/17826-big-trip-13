@@ -1,26 +1,27 @@
 import dayjs from 'dayjs';
+import {createElement} from '../utils/utils.js';
 
-const renderOffers = (arr) => {
+const renderTemplateOffers = (offers) => {
   let str = ``;
-  if (arr.length > 0) {
-    arr.forEach((elem) => {
+  if (offers.length > 0) {
+    offers.forEach((offer) => {
       str += `<li class="event__offer">
-      <span class="event__offer-title">${elem.name}</span>
+      <span class="event__offer-title">${offer.name}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${elem.cost}</span>
+      <span class="event__offer-price">${offer.cost}</span>
     </li>`;
     });
   }
   return str;
 };
 
-export const createPoint = (point) => {
+const createPoint = (point) => {
   const {date, type, city, timeStart, timeEnd, price, offers, isFavorite} = point;
-  const title = type + ` ` + city;
+  const title = `${type} ${city}`;
 
-  const getDuration = (start, end) => {
+  const getDuration = (startTime, endTime) => {
     let str = ``;
-    const diff = dayjs(end).diff(start, `minute`);
+    const diff = dayjs(endTime).diff(startTime, `minute`);
     if (diff / 60 <= 0) {
       str += diff;
     }
@@ -29,7 +30,7 @@ export const createPoint = (point) => {
   };
   const duration = getDuration(timeStart, timeEnd);
 
-  const offersList = renderOffers(offers);
+  const offersList = renderTemplateOffers(offers);
 
   const favoriteClassName = isFavorite
     ? `event__favorite-btn event__favorite-btn--active`
@@ -69,3 +70,22 @@ export const createPoint = (point) => {
   </div>
 </li>`;
 };
+
+export default class Point {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+  getTemplate() {
+    return createPoint(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

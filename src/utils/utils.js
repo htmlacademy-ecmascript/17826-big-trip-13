@@ -1,28 +1,43 @@
-const render = (template, place, container) => {
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+const renderTemplate = (template, place, container) => {
   if (container) {
     container.insertAdjacentHTML(place, template);
   }
-  return;
+};
+
+const render = (element, place, container) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
 };
 
 const getRandomInteger = (min, max) => {
   return min + Math.floor(Math.random() * (max + 1 - min));
 };
-const getRandomElement = (arr) => {
+const getRandomItem = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
-};
-const getRandomArr = (arr) => {
-  let length = getRandomInteger(0, arr.length);
-  let newArr = [];
-  for (let i = 0; i < length; i++) {
-    newArr.push(arr[i]);
-  }
-  return newArr;
 };
 
 export {
+  RenderPosition,
   render,
+  renderTemplate,
+  createElement,
   getRandomInteger,
-  getRandomElement,
-  getRandomArr
+  getRandomItem,
 };

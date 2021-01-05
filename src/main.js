@@ -1,16 +1,17 @@
-import {render} from './utils/utils.js';
-import {createInfo} from './view/info.js';
-import {createCost} from './view/cost.js';
-import {createMenu} from './view/menu.js';
-import {createFiltersForm} from './view/filters.js';
-import {createEventsSortForm} from './view/events-sort.js';
-import {createEventsList} from './view/events-list.js';
-import {createPoint} from './view/point.js';
-import {createEditPointForm} from './view/edit-point.js';
-import {createAddPointForm} from './view/add-point.js';
+import {RenderPosition, render} from './utils/utils.js';
+import HeaderInfoView from './view/header-info.js';
+import HeaderCostView from './view/cost.js';
+import MenuView from './view/menu.js';
+import FiltersView from './view/filters.js';
+import EventsSortView from './view/events-sort.js';
+import EventListView from './view/events-list.js';
+import PointView from './view/point.js';
+import EditPointFormView from './view/edit-point.js';
+import AddPointFormView from './view/add-point.js';
+import NoPointsView from './view/no-points.js';
 import {generatePoint} from './mock/point.js';
 
-const POINTS_COUNT = 15;
+const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {
@@ -22,32 +23,95 @@ const sortedPoints = points.sort((a, b) => {
 });
 
 const headerContainer = document.querySelector(`.trip-main`);
-const headerInfoElement = createInfo();
-render(headerInfoElement, `afterbegin`, headerContainer);
+const headerInfoComponent = new HeaderInfoView();
+const headerInfoElement = headerInfoComponent.getElement();
+render(headerInfoElement, RenderPosition.AFTERBEGIN, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
-const headerCostElement = createCost(sortedPoints);
-render(headerCostElement, `beforeend`, headerInfo);
+const headerCostComponent = new HeaderCostView(sortedPoints);
+const headerCostElement = headerCostComponent.getElement();
+render(headerCostElement, RenderPosition.BEFOREEND, headerInfo);
+
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
-const menuElement = createMenu();
-render(menuElement, `afterbegin`, menuContainer);
-const filtersForm = createFiltersForm();
-render(filtersForm, `beforeend`, menuContainer);
+const menuComponent = new MenuView();
+const menuElement = menuComponent.getElement();
+render(menuElement, RenderPosition.AFTERBEGIN, menuContainer);
+const filtersComponent = new FiltersView();
+const filtersForm = filtersComponent.getElement();
+render(filtersForm, RenderPosition.BEFOREEND, menuContainer);
 
 const pointsContainer = document.querySelector(`.trip-events`);
-const pointsSortForm = createEventsSortForm();
-render(pointsSortForm, `beforeend`, pointsContainer);
-const pointsListElement = createEventsList();
-render(pointsListElement, `beforeend`, pointsContainer);
+if (sortedPoints.length === 0) {
+  const noPointsComponent = new NoPointsView();
+  const noPointsElement = noPointsComponent.getElement();
+  render(noPointsElement, RenderPosition.AFTERBEGIN, pointsContainer);
+} else {
+  const eventsSortComponent = new EventsSortView();
+  const eventsSortForm = eventsSortComponent.getElement();
+  render(eventsSortForm, RenderPosition.BEFOREEND, pointsContainer);
+  const pointsListComponent = new EventListView();
+  const pointsListElement = pointsListComponent.getElement();
+  render(pointsListElement, RenderPosition.BEFOREEND, pointsContainer);
 
-const pointsList = pointsContainer.querySelector(`.trip-events__list`);
-sortedPoints.forEach((point) => {
-  const pointElement = createPoint(point);
-  render(pointElement, `beforeend`, pointsList);
-});
-const editPointForm = createEditPointForm(sortedPoints[0]);
-render(editPointForm, `afterbegin`, pointsList);
+  sortedPoints.forEach((point) => {
+    const pointComponent = new PointView(point);
+    const pointElement = pointComponent.getElement();
+    const editPointFormComponent = new EditPointFormView(point);
+    const editPointFormElement = editPointFormComponent.getElement();
+    render(pointElement, RenderPosition.BEFOREEND, pointsListElement);
+    const replacePointToEditForm = () => {
+      pointsListElement.replaceChild(editPointFormElement, pointElement);
+    };
+    const replaceEditFormToPoint = () => {
+      pointsListElement.replaceChild(pointElement, editPointFormElement);
+    };
+    const rollUpButtonPoint = pointElement.querySelector(`.event__rollup-btn`);
+    const rollUpButtonEditForm = editPointFormElement.querySelector(`.event__rollup-btn`);
 
-const addPointForm = createAddPointForm(sortedPoints[sortedPoints.length - 1]);
-render(addPointForm, `beforeend`, pointsList);
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Esc` || evt.key === `Escape`) {
+        evt.preventDefault();
+        replaceEditFormToPoint();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    rollUpButtonPoint.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      replacePointToEditForm();
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    rollUpButtonEditForm.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    const submitFormButton = editPointFormElement.querySelector(`.event__save-btn`);
+    submitFormButton.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+  });
+
+  const addPointFormComponent = new AddPointFormView(sortedPoints[sortedPoints.length - 1]);
+  const addPointForm = addPointFormComponent.getElement();
+  const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Esc` || evt.key === `Escape`) {
+      evt.preventDefault();
+      addPointForm.remove();
+      addPointFormComponent.removeElement();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  newEventButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    render(addPointForm, RenderPosition.AFTERBEGIN, pointsListElement);
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+}

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {
   getRandomInteger,
-  getRandomElement,
+  getRandomItem,
 } from '../utils/utils.js';
 
 const MAX_DATE_GAP = 14;
@@ -16,8 +16,8 @@ const generateDate = () => {
   return dayjs().add(daysGap, `day`).toDate();
 };
 
-const typesPoint = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
-const cities = [`Казань`, `Рига`, `Прага`, `Мюнхен`];
+const pointTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
+const citiesList = [`Казань`, `Рига`, `Прага`, `Мюнхен`];
 
 const offersList = [
   {
@@ -47,7 +47,7 @@ const offersList = [
   },
 ];
 const generateOffers = () => {
-  return getRandomElement(offersList);
+  return getRandomItem(offersList);
 };
 
 const description = [
@@ -62,7 +62,7 @@ const description = [
   `In rutrum ac purus sit amet tempus.`
 ];
 const generateDescription = () => {
-  return getRandomElement(description);
+  return getRandomItem(description);
 };
 
 const photos = [
@@ -73,12 +73,12 @@ const photos = [
   `http://picsum.photos/248/152?r=${Math.random()}`
 ];
 const generatePhotos = () => {
-  return getRandomElement(photos);
+  return getRandomItem(photos);
 };
 const generatePoint = () => {
   const date = generateDate();
-  const type = getRandomElement(typesPoint);
-  const city = getRandomElement(cities);
+  const type = getRandomItem(pointTypes);
+  const city = getRandomItem(citiesList);
   const timeStart = date;
   const timeEnd = dayjs(timeStart).add(getRandomInteger(0, MAX_TIME_GAP), `minute`).toDate();
   const offers = new Array(getRandomInteger(0, offersList.length)).fill().map(generateOffers);
@@ -100,4 +100,4 @@ const generatePoint = () => {
     }
   };
 };
-export {cities, offersList, generatePoint};
+export {citiesList, offersList, generatePoint};
