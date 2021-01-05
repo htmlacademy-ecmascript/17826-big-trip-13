@@ -108,7 +108,7 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/utils.js */ "./src/utils/utils.js");
-/* harmony import */ var _view_info_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view/info.js */ "./src/view/info.js");
+/* harmony import */ var _view_header_info_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./view/header-info.js */ "./src/view/header-info.js");
 /* harmony import */ var _view_cost_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view/cost.js */ "./src/view/cost.js");
 /* harmony import */ var _view_menu_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./view/menu.js */ "./src/view/menu.js");
 /* harmony import */ var _view_filters_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./view/filters.js */ "./src/view/filters.js");
@@ -144,7 +144,7 @@ const sortedPoints = points.sort((a, b) => {
 });
 
 const headerContainer = document.querySelector(`.trip-main`);
-const headerInfoComponent = new _view_info_js__WEBPACK_IMPORTED_MODULE_1__["default"]();
+const headerInfoComponent = new _view_header_info_js__WEBPACK_IMPORTED_MODULE_1__["default"]();
 const headerInfoElement = headerInfoComponent.getElement();
 Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerInfoElement, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, headerContainer);
 
@@ -168,28 +168,27 @@ if (sortedPoints.length === 0) {
   const noPointsElement = noPointsComponent.getElement();
   Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(noPointsElement, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
 } else {
-  const pointsSortFormComponent = new _view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
-  const pointsSortForm = pointsSortFormComponent.getElement();
-  Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointsSortForm, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
+  const eventsSortComponent = new _view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
+  const eventsSortForm = eventsSortComponent.getElement();
+  Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(eventsSortForm, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
   const pointsListComponent = new _view_events_list_js__WEBPACK_IMPORTED_MODULE_6__["default"]();
   const pointsListElement = pointsListComponent.getElement();
   Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointsListElement, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
 
-  const pointsList = pointsContainer.querySelector(`.trip-events__list`);
   sortedPoints.forEach((point) => {
-    const pointsComponent = new _view_point_js__WEBPACK_IMPORTED_MODULE_7__["default"](point);
-    const pointElement = pointsComponent.getElement();
+    const pointComponent = new _view_point_js__WEBPACK_IMPORTED_MODULE_7__["default"](point);
+    const pointElement = pointComponent.getElement();
     const editPointFormComponent = new _view_edit_point_js__WEBPACK_IMPORTED_MODULE_8__["default"](point);
-    const editPointForm = editPointFormComponent.getElement();
-    Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointElement, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsList);
+    const editPointFormElement = editPointFormComponent.getElement();
+    Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointElement, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsListElement);
     const replacePointToEditForm = () => {
-      pointsList.replaceChild(editPointForm, pointElement);
+      pointsListElement.replaceChild(editPointFormElement, pointElement);
     };
     const replaceEditFormToPoint = () => {
-      pointsList.replaceChild(pointElement, editPointForm);
+      pointsListElement.replaceChild(pointElement, editPointFormElement);
     };
     const rollUpButtonPoint = pointElement.querySelector(`.event__rollup-btn`);
-    const rollUpButtonEditForm = editPointForm.querySelector(`.event__rollup-btn`);
+    const rollUpButtonEditForm = editPointFormElement.querySelector(`.event__rollup-btn`);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
@@ -211,8 +210,8 @@ if (sortedPoints.length === 0) {
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
-    const editFormSubmitButton = editPointForm.querySelector(`.event__save-btn`);
-    editFormSubmitButton.addEventListener(`click`, (evt) => {
+    const submitFormButton = editPointFormElement.querySelector(`.event__save-btn`);
+    submitFormButton.addEventListener(`click`, (evt) => {
       evt.preventDefault();
       replaceEditFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
@@ -233,7 +232,7 @@ if (sortedPoints.length === 0) {
 
   newEventButton.addEventListener(`click`, (evt) => {
     evt.preventDefault();
-    Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointForm, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsList);
+    Object(_utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointForm, _utils_utils_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsListElement);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 }
@@ -1055,10 +1054,10 @@ class SiteFilters {
 
 /***/ }),
 
-/***/ "./src/view/info.js":
-/*!**************************!*\
-  !*** ./src/view/info.js ***!
-  \**************************/
+/***/ "./src/view/header-info.js":
+/*!*********************************!*\
+  !*** ./src/view/header-info.js ***!
+  \*********************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
