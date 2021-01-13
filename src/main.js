@@ -4,6 +4,7 @@ import HeaderCostView from './view/cost.js';
 import MenuView from './view/menu.js';
 import FiltersView from './view/filters.js';
 import EventsSortView from './view/events-sort.js';
+import AddPointButtonView from './view/add-point-button.js';
 import EventListView from './view/events-list.js';
 import PointView from './view/point.js';
 import EditPointFormView from './view/edit-point.js';
@@ -26,6 +27,10 @@ const headerContainer = document.querySelector(`.trip-main`);
 const headerInfoComponent = new HeaderInfoView();
 const headerInfoElement = headerInfoComponent.getElement();
 render(headerInfoElement, RenderPosition.AFTERBEGIN, headerContainer);
+
+const addPointButtonComponent = new AddPointButtonView();
+const addPointButtonElement = addPointButtonComponent.getElement();
+render(addPointButtonElement, RenderPosition.BEFOREEND, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
 const headerCostComponent = new HeaderCostView(sortedPoints);
@@ -99,7 +104,7 @@ if (sortedPoints.length === 0) {
 
   const addPointFormComponent = new AddPointFormView(sortedPoints[sortedPoints.length - 1]);
   const addPointForm = addPointFormComponent.getElement();
-  const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
+
   const onEscKeyDown = (evt) => {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
@@ -109,8 +114,7 @@ if (sortedPoints.length === 0) {
     }
   };
 
-  newEventButton.addEventListener(`click`, (evt) => {
-    evt.preventDefault();
+  addPointButtonComponent.setClickHandler(() => {
     render(addPointForm, RenderPosition.AFTERBEGIN, pointsListElement);
     document.addEventListener(`keydown`, onEscKeyDown);
   });

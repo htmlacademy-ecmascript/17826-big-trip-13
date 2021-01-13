@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {citiesList, offersList} from '../mock/point.js';
-import {createElement} from '../utils/utils.js';
+import AbstractView from '../view/abstract.js';
 
 const createPointCitiesTemplate = (cities) => {
   return cities.reduce((total, current) => total + `<option value="${current}"></option>`, `<datalist id="destination-list-1">`) + `</datalist>`;
@@ -162,21 +162,22 @@ const createEditPointForm = (point) => {
 </li>`;
 };
 
-export default class EditPointForm {
+export default class EditPointForm extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
   getTemplate() {
     return createEditPointForm(this._point);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+
+  _editClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._editClickHandler);
   }
 }

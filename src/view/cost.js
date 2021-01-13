@@ -1,4 +1,4 @@
-import {createElement} from '../utils/utils.js';
+import AbstractView from '../view/abstract.js';
 
 const createHeaderCost = (points) => {
   const tripCost = 0;
@@ -23,21 +23,12 @@ const createHeaderCost = (points) => {
 </p>`;
 };
 
-export default class HeaderCost {
+export default class HeaderCost extends AbstractView {
   constructor(points) {
+    super();
     this._points = points;
-    this._element = null;
   }
   getTemplate() {
     return createHeaderCost(this._points);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

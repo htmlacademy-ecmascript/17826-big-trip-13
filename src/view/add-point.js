@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {citiesList, offersList} from '../mock/point.js';
-import {createElement} from '../utils/utils.js';
+import AbstractView from '../view/abstract.js';
 
 const createPointCitiesTemplate = (cities) => {
   return cities.reduce((total, current) => total + `<option value="${current}"></option>`, `<datalist id="destination-list-1">`) + `</datalist>`;
@@ -161,21 +161,12 @@ const createAddPointForm = (point = {}) => {
 </li>`;
 };
 
-export default class AddPointForm {
+export default class AddPointForm extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
   }
   getTemplate() {
     return createAddPointForm(this._point);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

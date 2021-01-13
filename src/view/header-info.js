@@ -1,5 +1,5 @@
-import {createElement} from '../utils/utils.js';
 import {citiesList} from '../mock/point.js';
+import AbstractView from '../view/abstract.js';
 
 const createInfo = () => {
   let cities = citiesList.reduce((total, current) => total + ` &mdash; ` + current);
@@ -14,20 +14,8 @@ const createInfo = () => {
   </section>`;
 };
 
-export default class HeaderInfo {
-  constructor() {
-    this._element = null;
-  }
+export default class HeaderInfo extends AbstractView {
   getTemplate() {
     return createInfo();
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
