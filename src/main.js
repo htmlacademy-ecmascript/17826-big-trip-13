@@ -1,4 +1,4 @@
-import {RenderPosition, render} from './utils/utils.js';
+import {RenderPosition, render} from './utils/render.js';
 import HeaderInfoView from './view/header-info.js';
 import HeaderCostView from './view/cost.js';
 import MenuView from './view/menu.js';
@@ -65,14 +65,13 @@ if (sortedPoints.length === 0) {
     const editPointFormComponent = new EditPointFormView(point);
     const editPointFormElement = editPointFormComponent.getElement();
     render(pointElement, RenderPosition.BEFOREEND, pointsListElement);
+
     const replacePointToEditForm = () => {
       pointsListElement.replaceChild(editPointFormElement, pointElement);
     };
     const replaceEditFormToPoint = () => {
       pointsListElement.replaceChild(pointElement, editPointFormElement);
     };
-    const rollUpButtonPoint = pointElement.querySelector(`.event__rollup-btn`);
-    const rollUpButtonEditForm = editPointFormElement.querySelector(`.event__rollup-btn`);
 
     const onEscKeyDown = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
@@ -82,21 +81,16 @@ if (sortedPoints.length === 0) {
       }
     };
 
-    rollUpButtonPoint.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    pointComponent.setClickHandler(() => {
       replacePointToEditForm();
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    rollUpButtonEditForm.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    editPointFormComponent.setEditFormClickHandler(() => {
       replaceEditFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-
-    const submitFormButton = editPointFormElement.querySelector(`.event__save-btn`);
-    submitFormButton.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    editPointFormComponent.setEditFormSubmitHandler(() => {
       replaceEditFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
