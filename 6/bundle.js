@@ -134,7 +134,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const POINTS_COUNT = 5;
+const POINTS_COUNT = 0;
 const points = new Array(POINTS_COUNT).fill().map(_mock_point_js__WEBPACK_IMPORTED_MODULE_12__["generatePoint"]);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {
@@ -164,9 +164,23 @@ const filtersComponent = new _view_filters_js__WEBPACK_IMPORTED_MODULE_4__["defa
 Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(filtersComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, menuContainer);
 
 const pointsContainer = document.querySelector(`.trip-events`);
+const addPointFormComponent = new _view_add_point_js__WEBPACK_IMPORTED_MODULE_10__["default"](Object(_mock_point_js__WEBPACK_IMPORTED_MODULE_12__["generatePoint"])());
+
+const addFormEscHandler = (evt) => {
+  if (evt.key === `Esc` || evt.key === `Escape`) {
+    evt.preventDefault();
+    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["remove"])(addPointFormComponent);
+    document.removeEventListener(`keydown`, addFormEscHandler);
+  }
+};
 if (sortedPoints.length === 0) {
   const noPointsComponent = new _view_no_points_js__WEBPACK_IMPORTED_MODULE_11__["default"]();
   Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(noPointsComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
+
+  addPointButtonComponent.setClickHandler(() => {
+    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointFormComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
+    document.addEventListener(`keydown`, addFormEscHandler);
+  });
 } else {
   const eventsSortComponent = new _view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
   Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(eventsSortComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
@@ -178,6 +192,11 @@ if (sortedPoints.length === 0) {
     const editPointFormComponent = new _view_edit_point_js__WEBPACK_IMPORTED_MODULE_9__["default"](point);
     Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsListComponent);
 
+    addPointButtonComponent.setClickHandler(() => {
+      Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointFormComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsListComponent);
+      document.addEventListener(`keydown`, addFormEscHandler);
+    });
+
     const replacePointToEditForm = () => {
       Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["replace"])(editPointFormComponent, pointComponent);
     };
@@ -185,44 +204,30 @@ if (sortedPoints.length === 0) {
       Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["replace"])(pointComponent, editPointFormComponent);
     };
 
-    const onEscKeyDown = (evt) => {
+    const editFormEscHandler = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
         evt.preventDefault();
         replaceEditFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, editFormEscHandler);
       }
     };
 
     pointComponent.setClickHandler(() => {
       replacePointToEditForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, editFormEscHandler);
     });
 
     editPointFormComponent.setEditFormClickHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
     editPointFormComponent.setEditFormSubmitHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
   });
 
 }
-const addPointFormComponent = new _view_add_point_js__WEBPACK_IMPORTED_MODULE_10__["default"](Object(_mock_point_js__WEBPACK_IMPORTED_MODULE_12__["generatePoint"])());
-
-const onEscKeyDown = (evt) => {
-  if (evt.key === `Esc` || evt.key === `Escape`) {
-    evt.preventDefault();
-    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["remove"])(addPointFormComponent);
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  }
-};
-
-addPointButtonComponent.setClickHandler(() => {
-  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointFormComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
-  document.addEventListener(`keydown`, onEscKeyDown);
-});
 
 
 /***/ }),
