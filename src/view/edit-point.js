@@ -1,15 +1,9 @@
 import dayjs from 'dayjs';
 import {citiesList, offersList} from '../mock/point.js';
-import {createElement} from '../utils/utils.js';
+import AbstractView from '../view/abstract.js';
 
 const createPointCitiesTemplate = (cities) => {
-  let str = ``;
-  str += `<datalist id="destination-list-1">`;
-  cities.forEach((city) => {
-    str += `<option value="${city}"></option>`;
-  });
-  str += `</datalist>`;
-  return str;
+  return cities.reduce((total, current) => total + `<option value="${current}"></option>`, `<datalist id="destination-list-1">`) + `</datalist>`;
 };
 
 const createPointDateTemplate = (timeStart, timeEnd) => {
@@ -25,46 +19,47 @@ const createPointDateTemplate = (timeStart, timeEnd) => {
 };
 
 const createPointDescriptionTemplate = (description) => {
-  let str = ``;
   if (description.length > 0) {
-    str += `<p class="event__destination-description">`;
-    description.forEach((item) => {
-      str += item += ` `;
-    });
-    str += `</p>`;
+    return description.reduce((total, current) => total + current + ` `, `<p class="event__destination-description">`) + `</p>`;
   }
-  return str;
+  return ``;
 };
 
 const createPointOffersTemplate = (defaultOffers, checkedOffers) => {
-  let str = ``;
   if (checkedOffers.length > 0) {
-    str += `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers">`;
-    defaultOffers.forEach((offer) => {
-      str += `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${checkedOffers.includes(offer) ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${offer.id}">
-        <span class="event__offer-title">${offer.name}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.cost}</span>
-      </label>
-    </div>`;
-    });
-    str += `</div></section>`;
+    return defaultOffers.reduce((total, current) => total +
+    `<div class="event__offer-selector">
+       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${current.id}" type="checkbox" name="event-offer-${current.id}" ${checkedOffers.includes(current) ? `checked` : ``}>
+       <label class="event__offer-label" for="event-offer-${current.id}">
+         <span class="event__offer-title">${current.name}</span>
+         &plus;&euro;&nbsp;
+         <span class="event__offer-price">${current.cost}</span>
+       </label>
+     </div>`,
+    `<section class="event__section  event__section--offers">
+         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+         <div class="event__available-offers">`) + `</div></section>`;
   }
-  return str;
+  return ``;
+};
+
+const createPointPhotosTemplate = (photos) => {
+  if (photos.length > 0) {
+    return photos.reduce((total, current) => total + `<img class="event__photo" src="${current}.jpg" alt="Event photo">`,
+        `<div class="event__photos-container"><div class="event__photos-tape">`) + `</div></div>`;
+  }
+  return ``;
 };
 
 const createEditPointForm = (point) => {
   const {type, city, timeStart, timeEnd, price, offers} = point;
-  const {description} = point.destination;
+  const {description, photos} = point.destination;
 
   const citiesTemplate = createPointCitiesTemplate(citiesList);
   const dateTemplate = createPointDateTemplate(timeStart, timeEnd);
   const offersTemplate = createPointOffersTemplate(offersList, offers);
   const descriptionTemplate = createPointDescriptionTemplate(description);
+  const photosTemplate = createPointPhotosTemplate(photos);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -157,27 +152,41 @@ const createEditPointForm = (point) => {
     </header>
     <section class="event__details">
       ${offersTemplate}
-      ${descriptionTemplate}
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          ${descriptionTemplate}
+          ${photosTemplate}
+        </section>
     </section>
   </form>
 </li>`;
 };
 
-export default class EditPointForm {
+export default class EditPointForm extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
+    this._editFormClickHandler = this._editFormClickHandler.bind(this);
+    this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
   }
   getTemplate() {
     return createEditPointForm(this._point);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+
+  _editFormClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+  _editFormSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.editFormSubmit();
+  }
+  setEditFormClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editFormClickHandler);
+  }
+  setEditFormSubmitHandler(callback) {
+    this._callback.editFormSubmit = callback;
+    this.getElement().querySelector(`.event__save-btn`).addEventListener(`click`, this._editFormSubmitHandler);
   }
 }

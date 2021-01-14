@@ -1,9 +1,10 @@
-import {RenderPosition, render} from './utils/utils.js';
+import {RenderPosition, render, replace, remove} from './utils/render.js';
 import HeaderInfoView from './view/header-info.js';
 import HeaderCostView from './view/cost.js';
 import MenuView from './view/menu.js';
 import FiltersView from './view/filters.js';
 import EventsSortView from './view/events-sort.js';
+import AddPointButtonView from './view/add-point-button.js';
 import EventListView from './view/events-list.js';
 import PointView from './view/point.js';
 import EditPointFormView from './view/edit-point.js';
@@ -11,7 +12,7 @@ import AddPointFormView from './view/add-point.js';
 import NoPointsView from './view/no-points.js';
 import {generatePoint} from './mock/point.js';
 
-const POINTS_COUNT = 5;
+const POINTS_COUNT = 0;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {
@@ -24,94 +25,84 @@ const sortedPoints = points.sort((a, b) => {
 
 const headerContainer = document.querySelector(`.trip-main`);
 const headerInfoComponent = new HeaderInfoView();
-const headerInfoElement = headerInfoComponent.getElement();
-render(headerInfoElement, RenderPosition.AFTERBEGIN, headerContainer);
+render(headerInfoComponent, RenderPosition.AFTERBEGIN, headerContainer);
+
+const addPointButtonComponent = new AddPointButtonView();
+render(addPointButtonComponent, RenderPosition.BEFOREEND, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
 const headerCostComponent = new HeaderCostView(sortedPoints);
-const headerCostElement = headerCostComponent.getElement();
-render(headerCostElement, RenderPosition.BEFOREEND, headerInfo);
+render(headerCostComponent, RenderPosition.BEFOREEND, headerInfo);
 
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
 const menuComponent = new MenuView();
-const menuElement = menuComponent.getElement();
-render(menuElement, RenderPosition.AFTERBEGIN, menuContainer);
+render(menuComponent, RenderPosition.AFTERBEGIN, menuContainer);
 const filtersComponent = new FiltersView();
-const filtersForm = filtersComponent.getElement();
-render(filtersForm, RenderPosition.BEFOREEND, menuContainer);
+render(filtersComponent, RenderPosition.BEFOREEND, menuContainer);
 
 const pointsContainer = document.querySelector(`.trip-events`);
+const addPointFormComponent = new AddPointFormView(generatePoint());
+
+const addFormEscHandler = (evt) => {
+  if (evt.key === `Esc` || evt.key === `Escape`) {
+    evt.preventDefault();
+    remove(addPointFormComponent);
+    document.removeEventListener(`keydown`, addFormEscHandler);
+  }
+};
 if (sortedPoints.length === 0) {
   const noPointsComponent = new NoPointsView();
-  const noPointsElement = noPointsComponent.getElement();
-  render(noPointsElement, RenderPosition.AFTERBEGIN, pointsContainer);
+  render(noPointsComponent, RenderPosition.AFTERBEGIN, pointsContainer);
+
+  addPointButtonComponent.setClickHandler(() => {
+    render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsContainer);
+    document.addEventListener(`keydown`, addFormEscHandler);
+  });
 } else {
   const eventsSortComponent = new EventsSortView();
-  const eventsSortForm = eventsSortComponent.getElement();
-  render(eventsSortForm, RenderPosition.BEFOREEND, pointsContainer);
+  render(eventsSortComponent, RenderPosition.BEFOREEND, pointsContainer);
   const pointsListComponent = new EventListView();
-  const pointsListElement = pointsListComponent.getElement();
-  render(pointsListElement, RenderPosition.BEFOREEND, pointsContainer);
+  render(pointsListComponent, RenderPosition.BEFOREEND, pointsContainer);
 
   sortedPoints.forEach((point) => {
     const pointComponent = new PointView(point);
-    const pointElement = pointComponent.getElement();
     const editPointFormComponent = new EditPointFormView(point);
-    const editPointFormElement = editPointFormComponent.getElement();
-    render(pointElement, RenderPosition.BEFOREEND, pointsListElement);
+    render(pointComponent, RenderPosition.BEFOREEND, pointsListComponent);
+
+    addPointButtonComponent.setClickHandler(() => {
+      render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsListComponent);
+      document.addEventListener(`keydown`, addFormEscHandler);
+    });
+
     const replacePointToEditForm = () => {
-      pointsListElement.replaceChild(editPointFormElement, pointElement);
+      replace(editPointFormComponent, pointComponent);
     };
     const replaceEditFormToPoint = () => {
-      pointsListElement.replaceChild(pointElement, editPointFormElement);
+      replace(pointComponent, editPointFormComponent);
     };
-    const rollUpButtonPoint = pointElement.querySelector(`.event__rollup-btn`);
-    const rollUpButtonEditForm = editPointFormElement.querySelector(`.event__rollup-btn`);
 
-    const onEscKeyDown = (evt) => {
+    const editFormEscHandler = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
         evt.preventDefault();
         replaceEditFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, editFormEscHandler);
       }
     };
 
-    rollUpButtonPoint.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    pointComponent.setClickHandler(() => {
       replacePointToEditForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, editFormEscHandler);
     });
 
-    rollUpButtonEditForm.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    editPointFormComponent.setEditFormClickHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
-
-    const submitFormButton = editPointFormElement.querySelector(`.event__save-btn`);
-    submitFormButton.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
+    editPointFormComponent.setEditFormSubmitHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
   });
 
-  const addPointFormComponent = new AddPointFormView(sortedPoints[sortedPoints.length - 1]);
-  const addPointForm = addPointFormComponent.getElement();
-  const newEventButton = document.querySelector(`.trip-main__event-add-btn`);
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Esc` || evt.key === `Escape`) {
-      evt.preventDefault();
-      addPointForm.remove();
-      addPointFormComponent.removeElement();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  newEventButton.addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    render(addPointForm, RenderPosition.AFTERBEGIN, pointsListElement);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
 }

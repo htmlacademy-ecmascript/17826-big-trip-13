@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {
   getRandomInteger,
   getRandomItem,
-} from '../utils/utils.js';
+} from '../utils/common.js';
 
 const MAX_DATE_GAP = 14;
 const MAX_TIME_GAP = 300;
