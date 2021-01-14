@@ -86,18 +86,18 @@ if (sortedPoints.length === 0) {
     });
   });
 
-  const addPointFormComponent = new AddPointFormView(generatePoint());
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Esc` || evt.key === `Escape`) {
-      evt.preventDefault();
-      remove(addPointFormComponent);
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  addPointButtonComponent.setClickHandler(() => {
-    render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsListComponent);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
 }
+const addPointFormComponent = new AddPointFormView(generatePoint());
+
+const onEscKeyDown = (evt) => {
+  if (evt.key === `Esc` || evt.key === `Escape`) {
+    evt.preventDefault();
+    remove(addPointFormComponent);
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  }
+};
+
+addPointButtonComponent.setClickHandler(() => {
+  render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsContainer);
+  document.addEventListener(`keydown`, onEscKeyDown);
+});
