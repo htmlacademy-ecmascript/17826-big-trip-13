@@ -147,52 +147,42 @@ const sortedPoints = points.sort((a, b) => {
 
 const headerContainer = document.querySelector(`.trip-main`);
 const headerInfoComponent = new _view_header_info_js__WEBPACK_IMPORTED_MODULE_1__["default"]();
-const headerInfoElement = headerInfoComponent.getElement();
-Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerInfoElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, headerContainer);
+Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerInfoComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, headerContainer);
 
 const addPointButtonComponent = new _view_add_point_button_js__WEBPACK_IMPORTED_MODULE_6__["default"]();
-const addPointButtonElement = addPointButtonComponent.getElement();
-Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointButtonElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, headerContainer);
+Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointButtonComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, headerContainer);
 
 const headerInfo = headerContainer.querySelector(`.trip-info`);
 const headerCostComponent = new _view_cost_js__WEBPACK_IMPORTED_MODULE_2__["default"](sortedPoints);
-const headerCostElement = headerCostComponent.getElement();
-Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerCostElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, headerInfo);
+Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(headerCostComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, headerInfo);
 
 
 const menuContainer = headerContainer.querySelector(`.trip-controls`);
 const menuComponent = new _view_menu_js__WEBPACK_IMPORTED_MODULE_3__["default"]();
-const menuElement = menuComponent.getElement();
-Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(menuElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, menuContainer);
+Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(menuComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, menuContainer);
 const filtersComponent = new _view_filters_js__WEBPACK_IMPORTED_MODULE_4__["default"]();
-const filtersForm = filtersComponent.getElement();
-Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(filtersForm, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, menuContainer);
+Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(filtersComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, menuContainer);
 
 const pointsContainer = document.querySelector(`.trip-events`);
 if (sortedPoints.length === 0) {
   const noPointsComponent = new _view_no_points_js__WEBPACK_IMPORTED_MODULE_11__["default"]();
-  const noPointsElement = noPointsComponent.getElement();
-  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(noPointsElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
+  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(noPointsComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
 } else {
   const eventsSortComponent = new _view_events_sort_js__WEBPACK_IMPORTED_MODULE_5__["default"]();
-  const eventsSortForm = eventsSortComponent.getElement();
-  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(eventsSortForm, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
+  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(eventsSortComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
   const pointsListComponent = new _view_events_list_js__WEBPACK_IMPORTED_MODULE_7__["default"]();
-  const pointsListElement = pointsListComponent.getElement();
-  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointsListElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
+  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointsListComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsContainer);
 
   sortedPoints.forEach((point) => {
     const pointComponent = new _view_point_js__WEBPACK_IMPORTED_MODULE_8__["default"](point);
-    const pointElement = pointComponent.getElement();
     const editPointFormComponent = new _view_edit_point_js__WEBPACK_IMPORTED_MODULE_9__["default"](point);
-    const editPointFormElement = editPointFormComponent.getElement();
-    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointElement, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsListElement);
+    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(pointComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].BEFOREEND, pointsListComponent);
 
     const replacePointToEditForm = () => {
-      pointsListElement.replaceChild(editPointFormElement, pointElement);
+      Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["replace"])(editPointFormComponent, pointComponent);
     };
     const replaceEditFormToPoint = () => {
-      pointsListElement.replaceChild(pointElement, editPointFormElement);
+      Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["replace"])(pointComponent, editPointFormComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -218,23 +208,21 @@ if (sortedPoints.length === 0) {
     });
   });
 
-  const addPointFormComponent = new _view_add_point_js__WEBPACK_IMPORTED_MODULE_10__["default"](sortedPoints[sortedPoints.length - 1]);
-  const addPointForm = addPointFormComponent.getElement();
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Esc` || evt.key === `Escape`) {
-      evt.preventDefault();
-      addPointForm.remove();
-      addPointFormComponent.removeElement();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  addPointButtonComponent.setClickHandler(() => {
-    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointForm, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsListElement);
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
 }
+const addPointFormComponent = new _view_add_point_js__WEBPACK_IMPORTED_MODULE_10__["default"](Object(_mock_point_js__WEBPACK_IMPORTED_MODULE_12__["generatePoint"])());
+
+const onEscKeyDown = (evt) => {
+  if (evt.key === `Esc` || evt.key === `Escape`) {
+    evt.preventDefault();
+    Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["remove"])(addPointFormComponent);
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  }
+};
+
+addPointButtonComponent.setClickHandler(() => {
+  Object(_utils_render_js__WEBPACK_IMPORTED_MODULE_0__["render"])(addPointFormComponent, _utils_render_js__WEBPACK_IMPORTED_MODULE_0__["RenderPosition"].AFTERBEGIN, pointsContainer);
+  document.addEventListener(`keydown`, onEscKeyDown);
+});
 
 
 /***/ }),
@@ -385,7 +373,7 @@ const getRandomItem = (arr) => {
 /*!*****************************!*\
   !*** ./src/utils/render.js ***!
   \*****************************/
-/*! exports provided: RenderPosition, render, renderTemplate, createElement */
+/*! exports provided: RenderPosition, render, renderTemplate, createElement, replace, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -394,6 +382,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renderTemplate", function() { return renderTemplate; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "replace", function() { return replace; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../view/abstract.js */ "./src/view/abstract.js");
+
+
 const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
   BEFOREEND: `beforeend`
@@ -405,13 +398,19 @@ const renderTemplate = (template, place, container) => {
   }
 };
 
-const render = (element, place, container) => {
+const render = (child, place, container) => {
+  if (container instanceof _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    container = container.getElement();
+  }
+  if (child instanceof _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    child = child.getElement();
+  }
   switch (place) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(element);
+      container.prepend(child);
       break;
     case RenderPosition.BEFOREEND:
-      container.append(element);
+      container.append(child);
       break;
   }
 };
@@ -420,6 +419,28 @@ const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
+};
+
+const replace = (newChild, oldChild) => {
+  if (oldChild instanceof _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    oldChild = oldChild.getElement();
+  }
+  if (newChild instanceof _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
+    newChild = newChild.getElement();
+  }
+  const parent = oldChild.parentElement;
+  if (parent === null || oldChild === null || newChild === null) {
+    throw new Error(`Can't replace unexisting elements`);
+  }
+  parent.replaceChild(newChild, oldChild);
+};
+
+const remove = (component) => {
+  if (!(component instanceof _view_abstract_js__WEBPACK_IMPORTED_MODULE_0__["default"])) {
+    throw new Error(`Can remove only components`);
+  }
+  component.getElement().remove();
+  component.removeElement();
 };
 
 
