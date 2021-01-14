@@ -12,7 +12,7 @@ import AddPointFormView from './view/add-point.js';
 import NoPointsView from './view/no-points.js';
 import {generatePoint} from './mock/point.js';
 
-const POINTS_COUNT = 5;
+const POINTS_COUNT = 0;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {
@@ -42,9 +42,23 @@ const filtersComponent = new FiltersView();
 render(filtersComponent, RenderPosition.BEFOREEND, menuContainer);
 
 const pointsContainer = document.querySelector(`.trip-events`);
+const addPointFormComponent = new AddPointFormView(generatePoint());
+
+const addFormEscHandler = (evt) => {
+  if (evt.key === `Esc` || evt.key === `Escape`) {
+    evt.preventDefault();
+    remove(addPointFormComponent);
+    document.removeEventListener(`keydown`, addFormEscHandler);
+  }
+};
 if (sortedPoints.length === 0) {
   const noPointsComponent = new NoPointsView();
   render(noPointsComponent, RenderPosition.AFTERBEGIN, pointsContainer);
+
+  addPointButtonComponent.setClickHandler(() => {
+    render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsContainer);
+    document.addEventListener(`keydown`, addFormEscHandler);
+  });
 } else {
   const eventsSortComponent = new EventsSortView();
   render(eventsSortComponent, RenderPosition.BEFOREEND, pointsContainer);
@@ -56,6 +70,11 @@ if (sortedPoints.length === 0) {
     const editPointFormComponent = new EditPointFormView(point);
     render(pointComponent, RenderPosition.BEFOREEND, pointsListComponent);
 
+    addPointButtonComponent.setClickHandler(() => {
+      render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsListComponent);
+      document.addEventListener(`keydown`, addFormEscHandler);
+    });
+
     const replacePointToEditForm = () => {
       replace(editPointFormComponent, pointComponent);
     };
@@ -63,41 +82,27 @@ if (sortedPoints.length === 0) {
       replace(pointComponent, editPointFormComponent);
     };
 
-    const onEscKeyDown = (evt) => {
+    const editFormEscHandler = (evt) => {
       if (evt.key === `Esc` || evt.key === `Escape`) {
         evt.preventDefault();
         replaceEditFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
+        document.removeEventListener(`keydown`, editFormEscHandler);
       }
     };
 
     pointComponent.setClickHandler(() => {
       replacePointToEditForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
+      document.addEventListener(`keydown`, editFormEscHandler);
     });
 
     editPointFormComponent.setEditFormClickHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
     editPointFormComponent.setEditFormSubmitHandler(() => {
       replaceEditFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      document.removeEventListener(`keydown`, editFormEscHandler);
     });
   });
 
 }
-const addPointFormComponent = new AddPointFormView(generatePoint());
-
-const onEscKeyDown = (evt) => {
-  if (evt.key === `Esc` || evt.key === `Escape`) {
-    evt.preventDefault();
-    remove(addPointFormComponent);
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  }
-};
-
-addPointButtonComponent.setClickHandler(() => {
-  render(addPointFormComponent, RenderPosition.AFTERBEGIN, pointsContainer);
-  document.addEventListener(`keydown`, onEscKeyDown);
-});
