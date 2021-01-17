@@ -5,14 +5,14 @@ import MenuView from './view/menu.js';
 import FiltersView from './view/filters.js';
 import EventsSortView from './view/events-sort.js';
 import AddPointButtonView from './view/add-point-button.js';
-import EventListView from './view/events-list.js';
+import EventsListView from './view/events-list.js';
 import PointView from './view/point.js';
 import EditPointFormView from './view/edit-point.js';
 import AddPointFormView from './view/add-point.js';
 import NoPointsView from './view/no-points.js';
 import {generatePoint} from './mock/point.js';
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 5;
 const points = new Array(POINTS_COUNT).fill().map(generatePoint);
 const sortedPoints = points.sort((a, b) => {
   if (a.date > b.date) {
@@ -62,7 +62,7 @@ if (sortedPoints.length === 0) {
 } else {
   const eventsSortComponent = new EventsSortView();
   render(eventsSortComponent, RenderPosition.BEFOREEND, pointsContainer);
-  const pointsListComponent = new EventListView();
+  const pointsListComponent = new EventsListView();
   render(pointsListComponent, RenderPosition.BEFOREEND, pointsContainer);
 
   sortedPoints.forEach((point) => {
