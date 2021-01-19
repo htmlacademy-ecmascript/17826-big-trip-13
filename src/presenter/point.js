@@ -7,6 +7,8 @@ export default class Points {
     this._pointsContainer = pointsContainer;
     this._setClickHandler = this._setClickHandler.bind(this);
     this._editFormEscHandler = this._editFormEscHandler.bind(this);
+    this._setEditFormClickHandler = this._setEditFormClickHandler.bind(this);
+    this._setEditFormSubmitHandler = this._setEditFormSubmitHandler.bind(this);
   }
 
   init(point) {
@@ -15,6 +17,7 @@ export default class Points {
     this._editPointFormComponent = new EditPointFormView(point);
     this._pointComponent.setClickHandler(this._setClickHandler);
     this._editPointFormComponent.setEditFormClickHandler(this._setEditFormClickHandler);
+    this._editPointFormComponent.setEditFormSubmitHandler(this._setEditFormSubmitHandler);
 
     render(this._pointComponent, RenderPosition.AFTERBEGIN, this._pointsContainer);
   }
