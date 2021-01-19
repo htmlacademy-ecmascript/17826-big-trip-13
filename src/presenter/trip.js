@@ -19,6 +19,7 @@ const MainPointsElement = document.querySelector(`.page-main .page-body__contain
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
+    this._pointsContainer = MainPointsElement;
     this._tripInfo = new TripInfoView();
     this._headerInfo = new HeaderInfoView();
     this._tripControls = new TripControlsView();
@@ -37,7 +38,6 @@ export default class Trip {
     this._renderTripControls();
     this._renderAddPointButton();
     this._renderTripEvents();
-
     this._renderPoints();
     this._renderAddPointForm();
   }
@@ -76,7 +76,7 @@ export default class Trip {
     };
 
     this._addPointButton.setClickHandler(() => {
-      if (this._points === 0) {
+      if (this._points.length === 0) {
         render(this._addPointForm, RenderPosition.AFTERBEGIN, this._tripEvents);
       }
       render(this._addPointForm, RenderPosition.AFTERBEGIN, this._eventsList);
@@ -84,7 +84,7 @@ export default class Trip {
     });
   }
   _renderTripEvents() {
-    render(this._tripEvents, RenderPosition.AFTERBEGIN, MainPointsElement);
+    render(this._tripEvents, RenderPosition.AFTERBEGIN, this._pointsContainer);
     if (this._points.length === 0) {
       this._renderNoPoints();
     } else {
