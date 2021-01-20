@@ -1,4 +1,5 @@
 import {RenderPosition, render, remove} from '../utils/render.js';
+import {updateItem} from '../utils/common.js';
 import TripInfoView from '../view/trip-info.js';
 import HeaderInfoView from '../view/header-info.js';
 import HeaderCostView from '../view/cost.js';
@@ -19,6 +20,8 @@ const MainPointsElement = document.querySelector(`.page-main .page-body__contain
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
+    this._pointPresenter = {};
+
     this._pointsContainer = MainPointsElement;
     this._tripInfo = new TripInfoView();
     this._headerInfo = new HeaderInfoView();
@@ -30,6 +33,10 @@ export default class Trip {
     this._eventsList = new EventsListView();
     this._noPoints = new NoPointsView();
     this._eventsSort = new EventsSortView();
+
+    this._setAddButtonClickHandler = this._setAddButtonClickHandler.bind(this);
+    this._addFormEscHandler = this._addFormEscHandler.bind(this);
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   init(points) {
@@ -40,6 +47,12 @@ export default class Trip {
     this._renderTripEvents();
     this._renderPoints();
     this._renderAddPointForm();
+
+    this._addPointButton.setAddButtonClickHandler(this._setAddButtonClickHandler);
+  }
+  _handlePointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
   _renderTripInfo() {
     render(this._tripInfo, RenderPosition.BEFOREEND, this._tripContainer);
@@ -66,22 +79,21 @@ export default class Trip {
   }
   _renderAddPointButton() {
     render(this._addPointButton, RenderPosition.BEFOREEND, this._tripContainer);
+  }
 
-    const addFormEscHandler = (evt) => {
-      if (evt.key === `Esc` || evt.key === `Escape`) {
-        evt.preventDefault();
-        remove(this._addPointForm);
-        document.removeEventListener(`keydown`, addFormEscHandler);
-      }
-    };
-
-    this._addPointButton.setClickHandler(() => {
-      if (this._points.length === 0) {
-        render(this._addPointForm, RenderPosition.AFTERBEGIN, this._tripEvents);
-      }
-      render(this._addPointForm, RenderPosition.AFTERBEGIN, this._eventsList);
-      document.addEventListener(`keydown`, addFormEscHandler);
-    });
+  _addFormEscHandler(evt) {
+    if (evt.key === `Esc` || evt.key === `Escape`) {
+      evt.preventDefault();
+      remove(this._addPointForm);
+      document.removeEventListener(`keydown`, this._addFormEscHandler);
+    }
+  }
+  _setAddButtonClickHandler() {
+    if (this._points.length === 0) {
+      render(this._addPointForm, RenderPosition.AFTERBEGIN, this._tripEvents);
+    }
+    render(this._addPointForm, RenderPosition.AFTERBEGIN, this._eventsList);
+    document.addEventListener(`keydown`, this._addFormEscHandler);
   }
   _renderTripEvents() {
     render(this._tripEvents, RenderPosition.AFTERBEGIN, this._pointsContainer);
@@ -101,18 +113,23 @@ export default class Trip {
   _renderNoPoints() {
     render(this._noPoints, RenderPosition.AFTERBEGIN, this._tripEvents);
   }
-
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._eventsList);
+    const pointPresenter = new PointPresenter(this._eventsList, this._handlePointChange);
     pointPresenter.init(point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
   _renderPoints() {
     this._points.forEach((point) => {
       this._renderPoint(point);
     });
   }
-
   _renderAddPointForm() {
     this._addPointForm = new AddPointFormView(generatePoint());
+  }
+  _clearPointList() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
   }
 }

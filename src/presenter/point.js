@@ -3,8 +3,9 @@ import EditPointFormView from '../view/edit-point.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 export default class Points {
-  constructor(pointsContainer) {
+  constructor(pointsContainer, changeData) {
     this._pointsContainer = pointsContainer;
+    this._changeData = changeData;
     this._pointComponent = null;
     this._editPointFormComponent = null;
 
@@ -12,10 +13,11 @@ export default class Points {
     this._editFormEscHandler = this._editFormEscHandler.bind(this);
     this._setEditFormClickHandler = this._setEditFormClickHandler.bind(this);
     this._setEditFormSubmitHandler = this._setEditFormSubmitHandler.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(point) {
-    this._points = point;
+    this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevEditPointFormComponent = this._editPointFormComponent;
@@ -26,6 +28,7 @@ export default class Points {
     this._pointComponent.setClickHandler(this._setClickHandler);
     this._editPointFormComponent.setEditFormClickHandler(this._setEditFormClickHandler);
     this._editPointFormComponent.setEditFormSubmitHandler(this._setEditFormSubmitHandler);
+    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevPointComponent === null || prevEditPointFormComponent === null) {
       render(this._pointComponent, RenderPosition.AFTERBEGIN, this._pointsContainer);
@@ -40,7 +43,7 @@ export default class Points {
     remove(prevPointComponent);
     remove(prevEditPointFormComponent);
   }
-  _destroy() {
+  destroy() {
     remove(this._pointComponent);
     remove(this._editPointFormComponent);
   }
@@ -65,7 +68,13 @@ export default class Points {
   _setEditFormClickHandler() {
     this._replaceEditFormToPoint();
   }
-  _setEditFormSubmitHandler() {
+  _setEditFormSubmitHandler(point) {
     this._replaceEditFormToPoint();
+    this._changeData(point);
+  }
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign({}, this._point, {isFavorite: !this._point.isFavorite})
+    );
   }
 }

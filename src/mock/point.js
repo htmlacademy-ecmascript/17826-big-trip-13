@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {
   getRandomInteger,
   getRandomItem,
@@ -76,16 +77,19 @@ const generatePhotos = () => {
   return getRandomItem(photos);
 };
 const generatePoint = () => {
+  const id = nanoid();
   const date = generateDate();
   const type = getRandomItem(pointTypes);
   const city = getRandomItem(citiesList);
   const timeStart = date;
   const timeEnd = dayjs(timeStart).add(getRandomInteger(0, MAX_TIME_GAP), `minute`).toDate();
   const offers = new Array(getRandomInteger(0, offersList.length)).fill().map(generateOffers);
+  const isFavorite = Boolean(getRandomInteger(0, 1));
   const randomDescription = new Array(getRandomInteger(0, MAX_LENGTH_DESCRIPTION)).fill().map(generateDescription);
   const randomPhotos = new Array(getRandomInteger(0, MAX_COUNT_PHOTOS)).fill().map(generatePhotos);
 
   return {
+    id,
     date,
     type,
     city,
@@ -93,7 +97,7 @@ const generatePoint = () => {
     timeEnd,
     price: getRandomInteger(MIN_PRICE, MAX_PRICE),
     offers,
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    isFavorite,
     destination: {
       description: randomDescription,
       photos: randomPhotos,
