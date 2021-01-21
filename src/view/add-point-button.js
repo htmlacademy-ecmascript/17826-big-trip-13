@@ -7,18 +7,18 @@ const createAddPointButton = () => {
 export default class AddPointButton extends AbstractView {
   constructor() {
     super();
-    this._addClickHandler = this._addClickHandler.bind(this);
+    this._addButtonClickHandler = this._addButtonClickHandler.bind(this);
   }
   getTemplate() {
     return createAddPointButton();
   }
 
-  _addClickHandler(evt) {
+  _addButtonClickHandler(evt) {
     evt.preventDefault();
-    this._callback.click();
+    this._callback.clickAddButton();
   }
-  setClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().addEventListener(`click`, this._addClickHandler);
+  setAddButtonClickHandler(callback) {
+    this._callback.clickAddButton = callback;
+    this.getElement().addEventListener(`click`, this._addButtonClickHandler);
   }
 }
