@@ -1,5 +1,5 @@
 import {RenderPosition, render, remove} from '../utils/render.js';
-import {pointsSortDate, pointsSortDuration, pointsSortPrice} from '../utils/sort.js';
+import {pointsSortDate, pointsSortPrice} from '../utils/sort.js';
 import {updateItem} from '../utils/common.js';
 import TripInfoView from '../view/trip-info.js';
 import HeaderInfoView from '../view/header-info.js';
@@ -17,13 +17,15 @@ import {generatePoint} from '../mock/point.js';
 import PointPresenter from './point.js';
 import {SortType} from '../const.js';
 
+const MainPointsElement = document.querySelector(`.page-main .page-body__container`);
+
 export default class Trip {
-  constructor(tripContainer, pointsContainer) {
+  constructor(tripContainer) {
     this._tripContainer = tripContainer;
-    this._pointsContainer = pointsContainer;
     this._pointPresenter = {};
     this._currentSortType = SortType.DAY;
 
+    this._pointsContainer = MainPointsElement;
     this._tripInfo = new TripInfoView();
     this._headerInfo = new HeaderInfoView();
     this._tripControls = new TripControlsView();
@@ -48,8 +50,8 @@ export default class Trip {
     this._renderTripControls();
     this._renderAddPointButton();
     this._renderTripEvents();
+    this._renderPoints();
     this._renderAddPointForm();
-    this._sortPoints();
 
     this._addPointButton.setAddButtonClickHandler(this._setAddButtonClickHandler);
   }
@@ -62,15 +64,11 @@ export default class Trip {
   }
   _sortPoints(sortType) {
     switch (sortType) {
-      case SortType.DAY:
-        this._points.sort(pointsSortDate);
-        break;
-      case SortType.TIME:
-        this._points.sort(pointsSortDuration);
-        break;
       case SortType.PRICE:
         this._points.sort(pointsSortPrice);
         break;
+      default:
+        this._points.sort(pointsSortDate);
     }
     this._currentSortType = sortType;
   }
@@ -80,7 +78,6 @@ export default class Trip {
     }
     this._sortPoints(sortType);
     this._clearPointList();
-    this._renderPoints();
   }
   _renderTripInfo() {
     render(this._tripInfo, RenderPosition.BEFOREEND, this._tripContainer);
@@ -130,7 +127,6 @@ export default class Trip {
     } else {
       this._renderEventsSort();
       this._renderEventsList();
-      this._renderPoints();
     }
   }
   _renderEventsSort() {

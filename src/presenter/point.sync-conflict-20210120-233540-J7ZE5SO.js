@@ -54,21 +54,13 @@ export default class Points {
     remove(this._pointComponent);
     remove(this._editPointFormComponent);
   }
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._replaceEditFormToPoint();
-    }
-  }
   _replacePointToEditForm() {
     replace(this._editPointFormComponent, this._pointComponent);
     document.addEventListener(`keydown`, this._editFormEscHandler);
-    this._changeMode();
-    this._mode = Mode.EDITING;
   }
   _replaceEditFormToPoint() {
     replace(this._pointComponent, this._editPointFormComponent);
     document.removeEventListener(`keydown`, this._editFormEscHandler);
-    this._mode = Mode.DEFAULT;
   }
   _editFormEscHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
