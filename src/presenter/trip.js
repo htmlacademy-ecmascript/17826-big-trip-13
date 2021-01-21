@@ -1,6 +1,6 @@
 import {RenderPosition, render, remove} from '../utils/render.js';
 import {pointsSortDate, pointsSortDuration, pointsSortPrice} from '../utils/sort.js';
-import {updateItem} from '../utils/common.js';
+import {updatedItem} from '../utils/common.js';
 import TripInfoView from '../view/trip-info.js';
 import HeaderInfoView from '../view/header-info.js';
 import HeaderCostView from '../view/cost.js';
@@ -54,7 +54,7 @@ export default class Trip {
     this._addPointButton.setAddButtonClickHandler(this._setAddButtonClickHandler);
   }
   _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
+    this._points = updatedItem(this._points, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
   _handleModeChange() {
