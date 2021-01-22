@@ -15,14 +15,14 @@ import NoPointsView from '../view/no-points.js';
 import AddPointFormView from '../view/add-point.js';
 import {generatePoint} from '../mock/point.js';
 import PointPresenter from './point.js';
-import {SortType} from '../const.js';
+import {SORT_TYPE} from '../const.js';
 
 export default class Trip {
   constructor(tripContainer, pointsContainer) {
     this._tripContainer = tripContainer;
     this._pointsContainer = pointsContainer;
     this._pointPresenter = {};
-    this._currentSortType = SortType.DAY;
+    this._currentSortType = SORT_TYPE.DAY;
 
     this._tripInfo = new TripInfoView();
     this._headerInfo = new HeaderInfoView();
@@ -62,13 +62,13 @@ export default class Trip {
   }
   _sortPoints(sortType) {
     switch (sortType) {
-      case SortType.DAY:
+      case SORT_TYPE.DAY:
         this._points.sort(pointsSortDate);
         break;
-      case SortType.TIME:
+      case SORT_TYPE.TIME:
         this._points.sort(pointsSortDuration);
         break;
-      case SortType.PRICE:
+      case SORT_TYPE.PRICE:
         this._points.sort(pointsSortPrice);
         break;
     }

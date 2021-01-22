@@ -104,4 +104,4 @@ const generatePoint = () => {
     }
   };
 };
-export {citiesList, offersList, generatePoint};
+export {pointTypes, citiesList, offersList, generatePoint};
