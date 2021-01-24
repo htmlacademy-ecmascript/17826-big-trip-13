@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {pointTypes, citiesList, offersList} from '../mock/point.js';
 import AbstractView from '../view/abstract.js';
+import {makeFirstLatterUppercase} from '../utils/common.js';
 
 const createPointTypesTemplate = (currentPointType, defaultPointTypes) => {
   return defaultPointTypes.map((type) => `<div class="event__type-item">
@@ -128,6 +129,10 @@ export default class EditPointForm extends AbstractView {
     this._data = EditPointForm.parsePointToDate(point);
     this._editFormClickHandler = this._editFormClickHandler.bind(this);
     this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
+    this._editFormTypeChangeHandler = this._editFormTypeChangeHandler.bind(this);
+    this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._priceInputHandler = this._priceInputHandler.bind(this);
+    this._setInnerHandlers();
   }
   getTemplate() {
     return createEditPointForm(this._data);
@@ -146,6 +151,20 @@ export default class EditPointForm extends AbstractView {
     this._data = Object.assign({}, this._data, update);
     this.updateElement();
   }
+  reset(event) {
+    this.updateData(EditPointForm.parseEventToData(event));
+  }
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setEditFormClickHandler(this._callback.click);
+    this.setEditFormSubmitHandler(this._callback.editFormSubmit);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._editFormTypeChangeHandler);
+    this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
+    this.getElement().querySelector(`.event__input--price`).addEventListener(`input`, this._priceInputHandler);
+  }
 
   _editFormClickHandler(evt) {
     evt.preventDefault();
@@ -155,6 +174,27 @@ export default class EditPointForm extends AbstractView {
     evt.preventDefault();
     this._callback.editFormSubmit(EditPointForm.parsePointToDate(this._data));
   }
+  _editFormTypeChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      eventType: makeFirstLatterUppercase(evt.target.value),
+    });
+  }
+
+  _destinationChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      city: evt.target.value,
+    }, true);
+  }
+
+  _priceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      price: evt.target.value
+    }, true);
+  }
+
   setEditFormClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editFormClickHandler);

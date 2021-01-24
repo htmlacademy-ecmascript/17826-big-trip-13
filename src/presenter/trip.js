@@ -25,7 +25,6 @@ export default class Trip {
     this._currentSortType = SORT_TYPE.DAY;
 
     this._tripInfo = new TripInfoView();
-    this._headerInfo = new HeaderInfoView();
     this._tripControls = new TripControlsView();
     this._menu = new MenuView();
     this._filters = new FiltersView();
@@ -88,6 +87,7 @@ export default class Trip {
     this._renderHeaderCost();
   }
   _renderHeaderInfo() {
+    this._headerInfo = new HeaderInfoView(this._points);
     render(this._headerInfo, RenderPosition.AFTERBEGIN, this._tripInfo);
   }
   _renderHeaderCost() {

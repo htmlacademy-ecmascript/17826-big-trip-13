@@ -9,9 +9,13 @@ const updatedItem = (items, update) => {
   }
   return items.splice(index, 1, update);
 };
+const makeFirstLatterUppercase = (str) => {
+  return str[0].toUpperCase() + str.slice(1);
+};
 
 export {
   getRandomInteger,
   getRandomItem,
-  updatedItem
+  updatedItem,
+  makeFirstLatterUppercase
 };
