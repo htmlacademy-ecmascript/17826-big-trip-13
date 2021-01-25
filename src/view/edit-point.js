@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import flatpickr from "flatpickr";
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 import {pointTypes, citiesList, offersList} from '../mock/point.js';
 import SmartView from '../view/smart.js';
 
@@ -126,6 +128,7 @@ export default class EditPointForm extends SmartView {
   constructor(point) {
     super();
     this._data = EditPointForm.parsePointToData(point);
+    this._datepicker = null;
     this._editFormClickHandler = this._editFormClickHandler.bind(this);
     this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
     this._editFormTypeChangeHandler = this._editFormTypeChangeHandler.bind(this);
