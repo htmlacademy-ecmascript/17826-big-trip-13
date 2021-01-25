@@ -71,6 +71,7 @@ export default class Points {
   _editFormEscHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
+      this._editPointFormComponent.reset(this._point);
       this._replaceEditFormToPoint();
     }
   }

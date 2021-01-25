@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import {pointTypes, citiesList, offersList} from '../mock/point.js';
-import AbstractView from '../view/abstract.js';
-import {makeFirstLatterUppercase} from '../utils/common.js';
+import SmartView from '../view/smart.js';
 
 const createPointTypesTemplate = (currentPointType, defaultPointTypes) => {
   return defaultPointTypes.map((type) => `<div class="event__type-item">
@@ -123,10 +122,10 @@ const createEditPointForm = (data) => {
 </li>`;
 };
 
-export default class EditPointForm extends AbstractView {
+export default class EditPointForm extends SmartView {
   constructor(point) {
     super();
-    this._data = EditPointForm.parsePointToDate(point);
+    this._data = EditPointForm.parsePointToData(point);
     this._editFormClickHandler = this._editFormClickHandler.bind(this);
     this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
     this._editFormTypeChangeHandler = this._editFormTypeChangeHandler.bind(this);
@@ -134,25 +133,11 @@ export default class EditPointForm extends AbstractView {
     this._priceInputHandler = this._priceInputHandler.bind(this);
     this._setInnerHandlers();
   }
+  reset(point) {
+    this.updateData(EditPointForm.parsePointToData(point));
+  }
   getTemplate() {
     return createEditPointForm(this._data);
-  }
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this._removeElement();
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-  }
-  updateData(update) {
-    if (!update) {
-      return;
-    }
-    this._data = Object.assign({}, this._data, update);
-    this.updateElement();
-  }
-  reset(event) {
-    this.updateData(EditPointForm.parseEventToData(event));
   }
   restoreHandlers() {
     this._setInnerHandlers();
@@ -172,22 +157,20 @@ export default class EditPointForm extends AbstractView {
   }
   _editFormSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.editFormSubmit(EditPointForm.parsePointToDate(this._data));
+    this._callback.editFormSubmit(EditPointForm.parseDateToPoint(this._data));
   }
   _editFormTypeChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      eventType: makeFirstLatterUppercase(evt.target.value),
+      type: evt.target.value,
     });
   }
-
   _destinationChangeHandler(evt) {
     evt.preventDefault();
     this.updateData({
       city: evt.target.value,
     }, true);
   }
-
   _priceInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
@@ -204,11 +187,11 @@ export default class EditPointForm extends AbstractView {
     this.getElement().querySelector(`.event__save-btn`).addEventListener(`click`, this._editFormSubmitHandler);
   }
 
-  static parsePointToDate(point) {
+  static parsePointToData(point) {
     return Object.assign({}, point);
   }
-  static parseDateToPoint(date) {
-    let point = Object.assign({}, date);
-    return point;
+  static parseDateToPoint(data) {
+    data = Object.assign({}, data);
+    return data;
   }
 }
