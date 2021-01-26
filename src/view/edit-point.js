@@ -133,8 +133,13 @@ export default class EditPointForm extends SmartView {
     this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
     this._editFormTypeChangeHandler = this._editFormTypeChangeHandler.bind(this);
     this._destinationChangeHandler = this._destinationChangeHandler.bind(this);
+    this._timeStartChangeHandler = this._timeStartChangeHandler.bind(this);
+    this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
     this._priceInputHandler = this._priceInputHandler.bind(this);
+
     this._setInnerHandlers();
+    this._setTimeStartPicker();
+    this._setTimeEndPicker();
   }
   reset(point) {
     this.updateData(EditPointForm.parsePointToData(point));
@@ -146,8 +151,39 @@ export default class EditPointForm extends SmartView {
     this._setInnerHandlers();
     this.setEditFormClickHandler(this._callback.click);
     this.setEditFormSubmitHandler(this._callback.editFormSubmit);
+    this._setTimeStartPicker();
+    this._setTimeEndPicker();
   }
 
+  _setTimeStartPicker() {
+    if (this._timeStartPicker) {
+      this._timeStartePicker.destroy();
+      this._timeStartPicker = null;
+    }
+    this._timeStartPicker = flatpickr(this.getElement().querySelector(`#event-start-time-1`),
+        {
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: dayjs(this._data.timeStart).toDate(),
+          enableTime: true,
+          onChange: this._timeStartChangeHandler
+        }
+    );
+  }
+  _setTimeEndPicker() {
+    if (this._timeEndPicker) {
+      this._timeEndPicker.destroy();
+      this._timeEndPicker = null;
+    }
+    this._timeEndPicker = flatpickr(this.getElement().querySelector(`#event-end-time-1`),
+        {
+          dateFormat: `d/m/Y H:i`,
+          defaultDate: dayjs(this._data.timeEnd).toDate(),
+          enableTime: true,
+          minDate: new Date(),
+          onChange: this._timeEndChangeHandler
+        }
+    );
+  }
   _setInnerHandlers() {
     this.getElement().querySelector(`.event__type-group`).addEventListener(`change`, this._editFormTypeChangeHandler);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._destinationChangeHandler);
@@ -173,6 +209,19 @@ export default class EditPointForm extends SmartView {
     this.updateData({
       city: evt.target.value,
     }, true);
+  }
+  _timeStartChangeHandler([userDate]) {
+    this.updateData({
+      timeStart: dayjs(userDate).second(59).toDate(),
+    }, true
+    );
+  }
+
+  _timeEndChangeHandler([userDate]) {
+    this.updateData({
+      timeEnd: dayjs(userDate).second(59).toDate(),
+    }, true
+    );
   }
   _priceInputHandler(evt) {
     evt.preventDefault();
