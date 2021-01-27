@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
 
-const pointsSortDate = (a, b) => {
-  return dayjs(a.date).diff(dayjs(b.date));
-};
+const pointsSortDate = (a, b) => dayjs(a.date).diff(dayjs(b.date));
 
 const pointsSortDuration = (a, b) => {
   const durationA = dayjs(a.timeEnd).diff(a.timeStart, `minute`);
@@ -10,9 +8,7 @@ const pointsSortDuration = (a, b) => {
   return durationA - durationB;
 };
 
-const pointsSortPrice = (a, b) => {
-  return a.price - b.price;
-};
+const pointsSortPrice = (a, b) => a.price - b.price;
 
 export {
   pointsSortDate,

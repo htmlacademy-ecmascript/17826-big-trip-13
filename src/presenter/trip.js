@@ -1,6 +1,6 @@
 import {RenderPosition, render, remove} from '../utils/render.js';
 import {pointsSortDate, pointsSortDuration, pointsSortPrice} from '../utils/sort.js';
-import {updateItem} from '../utils/common.js';
+import {updatedItem} from '../utils/common.js';
 import TripInfoView from '../view/trip-info.js';
 import HeaderInfoView from '../view/header-info.js';
 import HeaderCostView from '../view/cost.js';
@@ -15,17 +15,16 @@ import NoPointsView from '../view/no-points.js';
 import AddPointFormView from '../view/add-point.js';
 import {generatePoint} from '../mock/point.js';
 import PointPresenter from './point.js';
-import {SortType} from '../const.js';
+import {SORT_TYPE} from '../const.js';
 
 export default class Trip {
   constructor(tripContainer, pointsContainer) {
     this._tripContainer = tripContainer;
     this._pointsContainer = pointsContainer;
     this._pointPresenter = {};
-    this._currentSortType = SortType.DAY;
+    this._currentSortType = SORT_TYPE.DAY;
 
     this._tripInfo = new TripInfoView();
-    this._headerInfo = new HeaderInfoView();
     this._tripControls = new TripControlsView();
     this._menu = new MenuView();
     this._filters = new FiltersView();
@@ -54,7 +53,7 @@ export default class Trip {
     this._addPointButton.setAddButtonClickHandler(this._setAddButtonClickHandler);
   }
   _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
+    this._points = updatedItem(this._points, updatedPoint);
     this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
   _handleModeChange() {
@@ -62,13 +61,13 @@ export default class Trip {
   }
   _sortPoints(sortType) {
     switch (sortType) {
-      case SortType.DAY:
+      case SORT_TYPE.DAY:
         this._points.sort(pointsSortDate);
         break;
-      case SortType.TIME:
+      case SORT_TYPE.TIME:
         this._points.sort(pointsSortDuration);
         break;
-      case SortType.PRICE:
+      case SORT_TYPE.PRICE:
         this._points.sort(pointsSortPrice);
         break;
     }
@@ -88,6 +87,7 @@ export default class Trip {
     this._renderHeaderCost();
   }
   _renderHeaderInfo() {
+    this._headerInfo = new HeaderInfoView(this._points);
     render(this._headerInfo, RenderPosition.AFTERBEGIN, this._tripInfo);
   }
   _renderHeaderCost() {

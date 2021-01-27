@@ -3,7 +3,7 @@ import EditPointFormView from '../view/edit-point.js';
 import {render, RenderPosition, replace, remove} from '../utils/render.js';
 
 const Mode = {
-  DEFAULT: `DEFAULT`,
+  LIST: `LIST`,
   EDITING: `EDITING`
 };
 
@@ -15,7 +15,7 @@ export default class Points {
 
     this._pointComponent = null;
     this._editPointFormComponent = null;
-    this._mode = Mode.DEFAULT;
+    this._mode = Mode.LIST;
 
     this._setClickHandler = this._setClickHandler.bind(this);
     this._editFormEscHandler = this._editFormEscHandler.bind(this);
@@ -40,11 +40,9 @@ export default class Points {
     if (prevPointComponent === null || prevEditPointFormComponent === null) {
       render(this._pointComponent, RenderPosition.AFTERBEGIN, this._pointsContainer);
       return;
-    }
-    if (this._mode === Mode.DEFAULT) {
+    } else if (this._mode === Mode.LIST) {
       replace(this._pointComponent, prevPointComponent);
-    }
-    if (this._mode === Mode.EDITING) {
+    } else if (this._mode === Mode.EDITING) {
       replace(this._editPointFormComponent, prevEditPointFormComponent);
     }
     remove(prevPointComponent);
@@ -55,7 +53,7 @@ export default class Points {
     remove(this._editPointFormComponent);
   }
   resetView() {
-    if (this._mode !== Mode.DEFAULT) {
+    if (this._mode !== Mode.LIST) {
       this._replaceEditFormToPoint();
     }
   }
@@ -68,11 +66,12 @@ export default class Points {
   _replaceEditFormToPoint() {
     replace(this._pointComponent, this._editPointFormComponent);
     document.removeEventListener(`keydown`, this._editFormEscHandler);
-    this._mode = Mode.DEFAULT;
+    this._mode = Mode.LIST;
   }
   _editFormEscHandler(evt) {
     if (evt.key === `Esc` || evt.key === `Escape`) {
       evt.preventDefault();
+      this._editPointFormComponent.reset(this._point);
       this._replaceEditFormToPoint();
     }
   }
