@@ -4486,7 +4486,8 @@ class EditPointForm extends _view_smart_js__WEBPACK_IMPORTED_MODULE_4__["default
   constructor(point) {
     super();
     this._data = EditPointForm.parsePointToData(point);
-    this._datepicker = null;
+    this._timeStartPicker = null;
+    this._timeEndPicker = null;
     this._editFormClickHandler = this._editFormClickHandler.bind(this);
     this._editFormSubmitHandler = this._editFormSubmitHandler.bind(this);
     this._editFormTypeChangeHandler = this._editFormTypeChangeHandler.bind(this);
@@ -4515,7 +4516,7 @@ class EditPointForm extends _view_smart_js__WEBPACK_IMPORTED_MODULE_4__["default
 
   _setTimeStartPicker() {
     if (this._timeStartPicker) {
-      this._timeStartePicker.destroy();
+      this._timeStartPicker.destroy();
       this._timeStartPicker = null;
     }
     this._timeStartPicker = flatpickr__WEBPACK_IMPORTED_MODULE_1___default()(this.getElement().querySelector(`#event-start-time-1`),
